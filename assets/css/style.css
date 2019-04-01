@@ -6,6 +6,10 @@
 /* Fonts */
 @import url('https://fonts.googleapis.com/css?family=Oleo+Script:700|Permanent+Marker');
 
+body {
+  overflow: hidden;
+}
+
 .wrapper {
   padding-top: 1rem;
   width: 100vw;
@@ -14,9 +18,11 @@
 }
 
 #jumbo {
+  position: relative;
+  z-index: 100;
   color: #fff;
   background-color: #333333;
-  opacity: 1;
+  opacity: 0.9;
   background: linear-gradient(#f8868a 10%, #fad0c4 100%);
   padding: 0;
 }
@@ -40,28 +46,54 @@
     margin-left: 22%;
     margin-right: 24%;
   }
-  #train-smoke {
-    position: absolute;
-    bottom: 65px;
-    right: 269px;
-    opacity: 0.4;
-    height: 200px;
-  }
-  #train-img {
-    position: absolute;
-    bottom: 10px;
-    right: 0;
-    width: 600px;
-  }
 
+/* Train Animations */
+#train-right-top {
+  position: absolute;
+  top: 45px;
+  left: -150vw;
+  width: 300px;
+  z-index: 0;
 
-  
-.backdrop {
-  background: linear-gradient(#ff9a9e 10%, #fad0c4 100%) center;
-  background-size: contain;
-  margin: auto;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+          animation-duration: 25s;
+              animation-name: choochooRightTop;
 }
+  @keyframes choochooRightTop {
+    100% {transform: translateX(300vw)}
+  }
 
-.text {
-  
+#train-left-bottom {
+  position: absolute;
+  bottom: 15px;
+  right: -150vw;
+  width: 500px;
+
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+         animation-duration: 35s;
+             animation-name: choochooLeftBottom;
 }
+  @keyframes choochooLeftBottom {
+    100% {transform: translateX(-300vw)}
+  }
+
+#train-left-middle {
+  position: absolute;
+  top: 50vh;
+  right: -300vw;
+  width: 250px;
+  z-index: 0;
+
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+          animation-duration: 110s;
+              animation-name: choochooLeftMiddle;
+}
+  @keyframes choochooLeftMiddle {
+    100% {transform: translateX(-600vw)}
+  }
+  
+
+ 
