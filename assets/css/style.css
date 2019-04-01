@@ -1,19 +1,20 @@
 /* Stylesheets */
 @import "reset.css";
-@import "bootstrap.min.css";
-@import "fa.all.css";
+@import "bootstrap.min.css"; 
+@import "animate.css";
 
 /* Fonts */
 @import url('https://fonts.googleapis.com/css?family=Oleo+Script:700|Permanent+Marker');
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .wrapper {
   padding-top: 1rem;
+  padding-bottom: 1rem;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(#ff9a9e 10%, #fad0c4 100%);
 }
 
@@ -51,21 +52,24 @@ body {
     top: 20px;
   }
 
-/* Train Schedule Table */
+/* Cards */
 .card {
   position: relative;
   z-index: 100;
   background-color: rgba(245, 245, 245, 0.5); 
   color: #000;
   margin-top: 2rem;
+  box-shadow: 0 0 0 0.2rem #F8878B;
 }
   .card-header {
     font-weight: bold;
     background-color: #758295;
   }
+
+/* Train Schedule Table */
   .table thead th {
     border-top: none;
-    border-bottom: 2px solid #FCE9E8;
+    border-bottom: 1px solid #FCE9E8;
     font-weight: bold;
   }
   .table tbody td {
@@ -79,6 +83,7 @@ body {
   .form-control:focus {
     opacity: 0.8;
   }
+
 /* New Train Input Button */
 .btn-primary {
   background-color: #758598;
@@ -142,7 +147,7 @@ body {
 
 #train-left-middle {
   position: absolute;
-  top: 50vh;
+  top: 32.5vh;
   right: -300vw;
   width: 250px;
   z-index: 0;
