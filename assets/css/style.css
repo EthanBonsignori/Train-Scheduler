@@ -20,11 +20,9 @@ body {
 #jumbo {
   position: relative;
   z-index: 100;
-  color: #fff;
-  background-color: #333333;
-  opacity: 0.9;
-  background: linear-gradient(#f8868a 10%, #fad0c4 100%);
+  background: linear-gradient(#fad0c4 10%, #f8868a 100%);
   padding: 0;
+  margin: 0;
 }
   #title {
     width: 100%;
@@ -46,6 +44,66 @@ body {
     margin-left: 22%;
     margin-right: 24%;
   }
+  #moon {
+    font-size: 4rem;
+    position: absolute;
+    left: 80px;
+    top: 20px;
+  }
+
+/* Train Schedule Table */
+.card {
+  position: relative;
+  z-index: 100;
+  background-color: rgba(245, 245, 245, 0.5); 
+  color: #000;
+  margin-top: 2rem;
+}
+  .card-header {
+    font-weight: bold;
+    background-color: #758295;
+  }
+  .table thead th {
+    border-top: none;
+    border-bottom: 2px solid #FCE9E8;
+    font-weight: bold;
+  }
+  .table tbody td {
+    border-top: 1px solid #FCE9E8;
+  }
+
+/* New Train Input */
+.form-control {
+  opacity: 0.5;
+}
+  .form-control:focus {
+    opacity: 0.8;
+  }
+/* New Train Input Button */
+.btn-primary {
+  background-color: #758598;
+  border-color: #758598;
+  outline: none;
+}
+  .btn-primary:hover {
+    background-color: #8b9db3;
+    border-color: #8b9db3;
+  }
+  .btn-primary:not(:disabled):not(.disabled):active, 
+  .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #9bb0ca;
+    border-color: #9bb0ca;
+    outline: none;
+  }
+  .btn-primary:not(:disabled):not(.disabled):active:focus, 
+  .show>.btn-primary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem #9bb0ca75;
+  }
+  .btn-primary.focus, .btn-primary:focus {
+    box-shadow: none;
+    outline: none;
+  }
 
 /* Train Animations */
 #train-right-top {
@@ -54,6 +112,7 @@ body {
   left: -150vw;
   width: 300px;
   z-index: 0;
+  opacity: 0.6;
 
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -69,6 +128,8 @@ body {
   bottom: 15px;
   right: -150vw;
   width: 500px;
+  z-index: 0;
+  opacity: 0.8;
 
   animation-timing-function: linear;
   animation-iteration-count: infinite;

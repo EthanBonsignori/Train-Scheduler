@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
   
   <title>Train Scheduler</title>
-
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <!-- My CSS (contains @imports to bootstrap css & others) -->
   <link rel="stylesheet" href="assets/css/style.css">
     
@@ -16,10 +16,70 @@
     <div class="container">
 
       <div id="jumbo" class="jumbotron jumbotron-fluid">
-          <h1 id="title" class="display-2 text-center">Midnight Train
-          <span id="subtitle">to wherever</span></h1>
-          <!-- <img id="train-smoke" src="assets/images/smoke.png"> -->
+        <h1 id="title" class="display-2 text-center">Midnight Train
+        <span id="moon"><i class="far fa-moon"></i></span>
+        <span id="subtitle">to wherever</span></h1>
       </div>
+
+      <!-- Train Schedule -->
+      <div class="card">
+        <h5 class="card-header" style="color:#FDADAB"><i class="fas fa-calendar-alt"></i> Train Schedule</h5>
+        <div class="card-body">
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Train Name</th>
+                  <th scope="col">Destination</th>
+                  <th scope="col">Frequency (min)</th>
+                  <th scope="col">Next Arrival</th>
+                  <th scope="col">Minutes Away</th>
+                </tr>
+              </thead>
+              <tbody id="train-table"> <!-- New Trains Append Here-->
+                <tr> <!-- Example train, delete later -->
+                  <td>Panda Express</td>
+                  <td>Denver, CO</td>
+                  <td>30</td>
+                  <td>5:00 PM</td>
+                  <td>10</td>
+                </tr>
+                <tr> <!-- Example train, delete later -->
+                  <td>Oregon Trail</td>
+                  <td>Oregon</td>
+                  <td>45</td>
+                  <td>5:15 PM</td>
+                  <td>34</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div> <!-- End Schedule Card-->
+
+        <!-- New Train Input -->
+        <div class="card">
+          <h5 class="card-header" style="color:#FCBBB5"><i class="fas fa-train"></i>  Add Train</h5>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <label for="train-name">Train Name</label>
+                <input type="text" class="form-control" id="trainName" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="train-destination">Destination</label>
+                <input type="text" class="form-control" id="train-destination" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="train-first-time">First Arrival Time (HH:mm - military time)</label>
+                <input type="text" class="form-control" id="train-first-time" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="train-frequency">Frequency (min)</label>
+                <input type="text" class="form-control" id="train-frequency" placeholder="">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div><!-- End Input Card-->
 
       <img id="train-right-top"   src="assets/images/train-right-top.png">
       <img id="train-left-middle" src="assets/images/train-left-middle.png">
