@@ -12,6 +12,7 @@ firebase.initializeApp(config)
 let dataRef = firebase.database()
 
 $(document).on('click', '#submit', function (event) {
+  event.preventDefault()
 
   // Get user input
   let trainName = $('#train-name').val().trim()
