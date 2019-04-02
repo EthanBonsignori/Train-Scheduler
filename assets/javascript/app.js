@@ -46,26 +46,28 @@ $(document).on('click', '#submit', function (event) {
 
 // Firebase watcher + initial loader HINT: .on("value")
 dataRef.ref().on('child_added', function (snapshot) {
-  let first = snapshot.val().firstArrival
-  let freq = snapshot.val().frequency
+  updateTrains(snapshot)
+  // On error,
+}, function (errorObject) {
+  console.log(`Errors on child_added: ${errorObject.code}`)
+})
+
+let updateTrains = (snap) => {
+  let first = snap.val().firstArrival
+  let freq = snap.val().frequency
   // Returns converted time values
   let times = getTrainTime(first, freq)
   let nextArrival = times[0]
   let minutesAway = times[1]
-
   // Add train to train schedule table
   let newRow = $('<tr>')
-  newRow.append(`<td>${snapshot.val().trainName}</td>`)
-  newRow.append(`<td>${snapshot.val().destination}</td>`)
-  newRow.append(`<td>${snapshot.val().frequency}</td>`)
+  newRow.append(`<td>${snap.val().trainName}</td>`)
+  newRow.append(`<td>${snap.val().destination}</td>`)
+  newRow.append(`<td>${snap.val().frequency}</td>`)
   newRow.append(`<td>${minutesAway}</td>`)
   newRow.append(`<td>${nextArrival}</td>`)
   $('#train-table').append(newRow)
-
-  // On error,
-}, function (errorObject) {
-  console.log(`Errors handled: ${errorObject.code}`)
-})
+}
 
 const getTrainTime = (first, freq) => {
   // First Time (pushed back 1 year to make sure it comes before current time)

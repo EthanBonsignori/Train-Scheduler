@@ -147,7 +147,7 @@ body {
 
 #train-left-middle {
   position: absolute;
-  top: 32.5vh;
+  top: -1.5rem;
   right: -300vw;
   width: 250px;
   z-index: 0;
