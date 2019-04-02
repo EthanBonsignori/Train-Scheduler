@@ -55,13 +55,13 @@ body {
 /* Audio Toggle */
 #audio-toggle {
   font-size: 2rem;
-  opacity: 0.8;
   position: absolute;
   bottom: 1rem;
-  right: 1rem; 
+  right: 1rem;
+  cursor: pointer;
 }
   #audio-toggle:hover {
-    opacity: 1;
+    text-shadow: 1px 1px 6px;
   }
 
 /* Cards */
@@ -89,6 +89,20 @@ body {
   }
 
 /* New Train Input */
+input[type=text] {
+  -webkit-appearance: none;
+
+  width: 100%;
+  border: 1px solid #333;
+  margin: 0;
+
+  font-family: inherit;
+  font-size: 90%;
+
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 input:invalid {
   box-shadow: 0 0 5px 1px red;
 }
@@ -110,6 +124,7 @@ input:focus:invalid {
   .error.active {
     padding: 0.3em;
   }
+  
 .form-control {
   opacity: 0.5;
 }

@@ -1,3 +1,5 @@
+let trainNames = []
+
 // Initialize Firebase
 var config = {
   apiKey: 'AIzaSyC9BcuqTuIWCyiocc7J-Uichf_emz1aZy4',
@@ -12,27 +14,32 @@ firebase.initializeApp(config)
 let dataRef = firebase.database()
 
 $(document).on('click', '#submit', function (event) {
-  checkInputValidity()
+  // checkInputValidity()
   event.preventDefault()
-
   // Get user input
   let trainName = $('#train-name').val().trim()
   let destination = $('#train-destination').val().trim()
   let firstArrival = $('#train-first-arrival').val().trim()
   let frequency = $('#train-frequency').val().trim()
-
-//   // Push input to firebase
-//   dataRef.ref().push({
-//     trainName: trainName,
-//     destination: destination,
-//     firstArrival: firstArrival,
-//     frequency: frequency,
-//     dateAdded: firebase.database.ServerValue.TIMESTAMP
-//   })
+  // Check the user input
+  let inputValid = checkValidity(trainName, destination, firstArrival, frequency)
+  // Only continue if the checkValidity() function returns true
+  if (inputValid) {
+    // Push input to firebase
+    dataRef.ref().push({
+      trainName: trainName,
+      destination: destination,
+      firstArrival: firstArrival,
+      frequency: frequency,
+      dateAdded: firebase.database.ServerValue.TIMESTAMP
+    })
+  }
 })
 
-// Firebase watcher + initial loader HINT: .on("value")
+// Firebase watcher for new child
 dataRef.ref().on('child_added', function (snapshot) {
+  trainNames.push(snapshot.val().trainName.toLowerCase())
+  console.log(trainNames)
   updateTrains(snapshot)
   // On error,
 }, function (errorObject) {
@@ -79,33 +86,88 @@ const getTrainTime = (first, freq) => {
   return [minsUntil, nextTrainConverted]
 }
 
-let checkInputValidity = () => {
-  let form = $('form')[0]
-  let name = $('#train-name')
-  let error = $('.error')
-
-  form.on('submit', function (event) {
-    // Each time the user tries to send the data, we check if the name field is valid.
-    if (!name.validity.valid) {
-      // If the field is not valid, we display a custom error message.
-      error.innerHTML = 'Enter a name with 1-20 characters'
-      error.className = 'error active'
-      // And we prevent the form from being sent by canceling the event
-      event.preventDefault()
-    }
-  }, false)
+// Only allows train to be added if it meets necessary requirements
+let checkValidity = (name, dest, first, freq) => {
+  // Select the error html elements for each input field
+  let nameErr = $('#name-error')
+  let destErr = $('#dest-error')
+  let timeErr = $('#time-error')
+  let freqErr = $('#freq-error')
+  // Will count up for each error and only allow the script to continue if there are 0 errors
+  let err = 0
+  // Check Train Name input
+  if (trainNames.indexOf(name.toLowerCase()) > -1) {
+    nameErr.text(' That train already exists! ')
+    nameErr.addClass('active')
+    err++
+  } else if (name === '' || name.length < 3) {
+    nameErr.text(' Train Name is required. (3-20 Characters) ')
+    nameErr.addClass('active')
+    err++
+  } else {
+    nameErr.text('')
+    nameErr.removeClass('active')
+  }
+  // Check Destination input
+  if (dest === '' || dest.length < 3) {
+    destErr.text(' Destination is required. (3-20 Characters) ')
+    destErr.addClass('active')
+    err++
+  } else {
+    destErr.text('')
+    destErr.removeClass('active')
+  }
+  // Check First Arrival input
+  // regex (for when browsers don't support <input type="time">)
+  const timeRegex = RegExp('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
+  let checkTime = timeRegex.test(first)
+  if (first === '') {
+    timeErr.text(' First Arrival is required. (HH:mm) ')
+    timeErr.addClass('active')
+    err++
+  } else if (!checkTime) {
+    timeErr.text(' First Arrival must be typed in military time (HH:mm) ')
+    timeErr.addClass('active')
+    err++
+  } else {
+    timeErr.text('')
+    timeErr.removeClass('active')
+  }
+  // Check Frequency input
+  if (freq === '') {
+    freqErr.text(' Frequency is required. (1-60) ')
+    freqErr.addClass('active')
+    err++
+  } else if (freq > 60 || freq < 1) {
+    freqErr.text(' Frequency must be between 1 and 60 ')
+    freqErr.addClass('active')
+    err++
+  } else {
+    freqErr.text('')
+    freqErr.removeClass('active')
+  }
+  // If any errors exist, do not continue pushing to firebase
+  if (err > 0) {
+    return false
+  } else {
+    return true
+  }
 }
 
-// Set audio volume low
-let audio = document.getElementById('audio')
-audio.volume = 0.1
 // Mute / Unmute the audio on click
-$(document).on('click', '#audio-toggle', function () { 
+$(document).on('click', '#audio-toggle', function () {
+  let audio = document.getElementById('audio')
   $(this).toggleClass('play')
   $(this).toggleClass('fa-volume-up')
   if (!$(this).hasClass('play')) {
     audio.volume = 0;
   } else {
-    audio.volume = 0.1;
+    audio.volume = 0.08;
   }
 })
+
+// Set audio volume low
+let audio = document.getElementById('audio')
+audio.volume = 0.08
+// Add some placeholder to the first arrival inpu0t
+document.getElementById('train-first-arrival').value = '21:00'
