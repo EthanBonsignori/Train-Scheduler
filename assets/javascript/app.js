@@ -15,13 +15,24 @@ $(document).on('click', '#submit', function (event) {
   event.preventDefault()
 
   // Get user input
-  let trainName =    $('#train-name').val().trim()
-  let destination =  $('#train-destination').val().trim()
+  let trainName = $('#train-name').val().trim()
+  let destination = $('#train-destination').val().trim()
   let firstArrival = $('#train-first-arrival').val().trim()
-  let frequency =    $('#train-frequency').val().trim()
+  let frequency = $('#train-frequency').val().trim()
 
-  let nextArrival = 'func()'
-  let minutesAway = 'func()'
+  $(':input').map(function () {
+    var errors = 0
+    if (!$(this).val()) {
+      $(this).parents('td').addClass('warning')
+      errors++
+    } else if ($(this).val()) {
+      $(this).parents('td').removeClass('warning')
+    }
+    if (errors > 0) {
+      $('#errorwarn').text('All fields are required');
+      return false
+    }
+  })
 
   // Push input to firebase
   dataRef.ref().push({
@@ -35,21 +46,46 @@ $(document).on('click', '#submit', function (event) {
 
 // Firebase watcher + initial loader HINT: .on("value")
 dataRef.ref().on('child_added', function (snapshot) {
-  // Log everything that's coming out of snapshot
-  console.log(snapshot.val())
-  console.log(snapshot.val().trainName)
-  console.log(snapshot.val().destination)
-  console.log(snapshot.val().firstArrival)
-  console.log(snapshot.val().frequency)
-  // Change the HTML to reflect
-  $('#train-name').text(snapshot.val().trainName)
-  $('#train-destination').text(snapshot.val().destination)
-  $('#train-first-arrival').text(snapshot.val().firstArrival)
-  $('#train-frequency').text(snapshot.val().frequency)
+  let first = snapshot.val().firstArrival
+  let freq = snapshot.val().frequency
+  // Returns converted time values
+  let times = getTrainTime(first, freq)
+  let nextArrival = times[0]
+  let minutesAway = times[1]
 
-  // Handle the errors
+  // Add train to train schedule table
+  let newRow = $('<tr>')
+  newRow.append(`<td>${snapshot.val().trainName}</td>`)
+  newRow.append(`<td>${snapshot.val().destination}</td>`)
+  newRow.append(`<td>${snapshot.val().frequency}</td>`)
+  newRow.append(`<td>${nextArrival}</td>`)
+  newRow.append(`<td>${minutesAway}</td>`)
+  $('#train-table').append(newRow)
+
+  // On error,
 }, function (errorObject) {
   console.log(`Errors handled: ${errorObject.code}`)
 })
 
-console.log(dataRef)
+const getTrainTime = (first, freq) => {
+  // First Time (pushed back 1 year to make sure it comes before current time)
+  let firstTimeConverted = moment(first, 'HH:mm').subtract(1, 'years')
+  console.log(firstTimeConverted)
+  // Current Time
+  let currentTime = moment()
+  console.log(`CURRENT TIME: ${moment(currentTime).format('hh:mm')}`)
+  // Difference between the times
+  let diffTime = moment().diff(moment(firstTimeConverted), 'minutes')
+  console.log(`DIFFERENCE IN TIME: ${diffTime}`)
+  // Time apart (remainder)
+  let remainder = diffTime % freq
+  // Minute(s) Until Train
+  let minsUntil = freq - remainder
+  console.log(`MINUTES TILL TRAIN: ${minsUntil}`)
+  // Next Train
+  let nextTrain = moment().add(minsUntil, 'minutes')
+  let nextTrainConverted = moment(nextTrain).format('hh:mm')
+  console.log(`ARRIVAL TIME: ${nextTrainConverted}`)
+
+  return [minsUntil, nextTrainConverted]
+}

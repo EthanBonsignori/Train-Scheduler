@@ -12,9 +12,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 
   <!-- Firebase & Firebase Auth -->
-  <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
     
 </head>
   <body>
@@ -29,7 +27,7 @@
       </div>
 
       <!-- Train Schedule -->
-      <div id="schedule-card" class="card animated fadeInUp slow">
+      <div id="schedule-card" class="card">
         <h5 class="card-header" style="color:#FDADAB"><i class="fas fa-calendar-alt"></i> Train Schedule</h5>
         <div class="card-body">
           <table class="table table-hover">
@@ -42,31 +40,16 @@
                   <th scope="col">Minutes Away</th>
                 </tr>
               </thead>
-              <tbody id="train-table"> <!-- New Trains Append Here-->
-                <tr> <!-- Example train, delete later -->
-                  <td>Panda Express</td>
-                  <td>Denver, CO</td>
-                  <td>30</td>
-                  <td>5:00 PM</td>
-                  <td>10</td>
-                </tr>
-                <tr> <!-- Example train, delete later -->
-                  <td>Oregon Trail</td>
-                  <td>Oregon</td>
-                  <td>45</td>
-                  <td>5:15 PM</td>
-                  <td>34</td>
-                </tr>
-              </tbody>
+              <tbody id="train-table"><!-- New Trains Append Here--></tbody>
             </table>
           </div>
         </div> <!-- End Schedule Card-->
 
         <!-- New Train Input -->
-        <div id="input-card" class="card animated fadeInUp slow">
+        <div id="input-card" class="card">
           <h5 class="card-header" style="color:#FCBBB5"><i class="fas fa-train"></i>  Add Train</h5>
           <div class="card-body">
-            <form>
+            <form id="train-form">
               <div class="form-group">
                 <label for="train-name">Train Name</label>
                 <input type="text" class="form-control" id="train-name" placeholder="">
@@ -83,6 +66,7 @@
                 <label for="train-frequency">Frequency (min)</label>
                 <input type="text" class="form-control" id="train-frequency" placeholder="">
               </div>
+              <p id="errorwarn"></p>
               <button type="submit" id="submit" class="btn btn-primary">Submit</button>
             </form>
           </div>
