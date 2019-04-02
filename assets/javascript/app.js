@@ -29,7 +29,7 @@ $(document).on('click', '#submit', function (event) {
       $(this).parents('td').removeClass('warning')
     }
     if (errors > 0) {
-      $('#errorwarn').text('All fields are required');
+      $('#errorwarn').text('All fields are required')
       return false
     }
   })
@@ -58,8 +58,8 @@ dataRef.ref().on('child_added', function (snapshot) {
   newRow.append(`<td>${snapshot.val().trainName}</td>`)
   newRow.append(`<td>${snapshot.val().destination}</td>`)
   newRow.append(`<td>${snapshot.val().frequency}</td>`)
-  newRow.append(`<td>${nextArrival}</td>`)
   newRow.append(`<td>${minutesAway}</td>`)
+  newRow.append(`<td>${nextArrival}</td>`)
   $('#train-table').append(newRow)
 
   // On error,
