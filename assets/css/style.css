@@ -52,6 +52,18 @@ body {
     top: 20px;
   }
 
+/* Audio Toggle */
+#audio-toggle {
+  font-size: 2rem;
+  opacity: 0.8;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem; 
+}
+  #audio-toggle:hover {
+    opacity: 1;
+  }
+
 /* Cards */
 .card {
   position: relative;
@@ -77,6 +89,27 @@ body {
   }
 
 /* New Train Input */
+input:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+input:focus:invalid {
+  box-shadow: none;
+}
+.error {
+  width  : 100%;
+  padding: 0;
+ 
+  font-size: 80%;
+  color: #fff;
+  background-color: red;
+  border-radius: 0 0 5px 5px;
+ 
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+  .error.active {
+    padding: 0.3em;
+  }
 .form-control {
   opacity: 0.5;
 }

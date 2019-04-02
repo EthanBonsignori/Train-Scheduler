@@ -12,6 +12,7 @@ firebase.initializeApp(config)
 let dataRef = firebase.database()
 
 $(document).on('click', '#submit', function (event) {
+  checkInputValidity()
   event.preventDefault()
 
   // Get user input
@@ -20,14 +21,14 @@ $(document).on('click', '#submit', function (event) {
   let firstArrival = $('#train-first-arrival').val().trim()
   let frequency = $('#train-frequency').val().trim()
 
-  // Push input to firebase
-  dataRef.ref().push({
-    trainName: trainName,
-    destination: destination,
-    firstArrival: firstArrival,
-    frequency: frequency,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
-  })
+//   // Push input to firebase
+//   dataRef.ref().push({
+//     trainName: trainName,
+//     destination: destination,
+//     firstArrival: firstArrival,
+//     frequency: frequency,
+//     dateAdded: firebase.database.ServerValue.TIMESTAMP
+//   })
 })
 
 // Firebase watcher + initial loader HINT: .on("value")
@@ -77,3 +78,34 @@ const getTrainTime = (first, freq) => {
 
   return [minsUntil, nextTrainConverted]
 }
+
+let checkInputValidity = () => {
+  let form = $('form')[0]
+  let name = $('#train-name')
+  let error = $('.error')
+
+  form.on('submit', function (event) {
+    // Each time the user tries to send the data, we check if the name field is valid.
+    if (!name.validity.valid) {
+      // If the field is not valid, we display a custom error message.
+      error.innerHTML = 'Enter a name with 1-20 characters'
+      error.className = 'error active'
+      // And we prevent the form from being sent by canceling the event
+      event.preventDefault()
+    }
+  }, false)
+}
+
+// Set audio volume low
+let audio = document.getElementById('audio')
+audio.volume = 0.1
+// Mute / Unmute the audio on click
+$(document).on('click', '#audio-toggle', function () { 
+  $(this).toggleClass('play')
+  $(this).toggleClass('fa-volume-up')
+  if (!$(this).hasClass('play')) {
+    audio.volume = 0;
+  } else {
+    audio.volume = 0.1;
+  }
+})
