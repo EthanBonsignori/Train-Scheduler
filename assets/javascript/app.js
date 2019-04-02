@@ -12,27 +12,12 @@ firebase.initializeApp(config)
 let dataRef = firebase.database()
 
 $(document).on('click', '#submit', function (event) {
-  event.preventDefault()
 
   // Get user input
   let trainName = $('#train-name').val().trim()
   let destination = $('#train-destination').val().trim()
   let firstArrival = $('#train-first-arrival').val().trim()
   let frequency = $('#train-frequency').val().trim()
-
-  $(':input').map(function () {
-    var errors = 0
-    if (!$(this).val()) {
-      $(this).parents('td').addClass('warning')
-      errors++
-    } else if ($(this).val()) {
-      $(this).parents('td').removeClass('warning')
-    }
-    if (errors > 0) {
-      $('#errorwarn').text('All fields are required')
-      return false
-    }
-  })
 
   // Push input to firebase
   dataRef.ref().push({
@@ -86,7 +71,7 @@ const getTrainTime = (first, freq) => {
   console.log(`MINUTES TILL TRAIN: ${minsUntil}`)
   // Next Train
   let nextTrain = moment().add(minsUntil, 'minutes')
-  let nextTrainConverted = moment(nextTrain).format('hh:mm')
+  let nextTrainConverted = moment(nextTrain).format('hh:mm A')
   console.log(`ARRIVAL TIME: ${nextTrainConverted}`)
 
   return [minsUntil, nextTrainConverted]
