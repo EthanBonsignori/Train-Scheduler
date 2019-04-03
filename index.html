@@ -24,6 +24,9 @@
           <span id="moon"><i class="far fa-moon"></i></span>
           <span id="subtitle">to wherever</span>
           <i id="audio-toggle" class="fas fa-volume-up fa-volume-mute play"></i>
+          <button type="button" id="title-icon" data-toggle="modal" data-target="#infoModal">
+              <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Info"></i>
+          </button>
         </h1>
       </div>
 
@@ -108,6 +111,27 @@
         <audio id="midnight-train">
           <source src="assets/music/midnight-train.mp3 " type="audio/mp3">
         </audio>
+        
+        <!-- Information Modal -->
+        <div class="modal fade" id="infoModal" tabindex="10" role="dialog" aria-labelledby="infoModal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="indoModalTitle">About</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+              <p>This Train Scheduler App was made as an exercise in saving and retrieving data from a server (Firebase)</p>
+              <p>All of this apps animations were created with css only.</p>
+              <p>Check out the <a href="https://github.com/EthanBonsignori/Train-Scheduler" target="_blank">github repository</a> for this project.</p>
+              <h6>-Ethan Bonsignori (4/2019)</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div> <!-- End Container -->
     </div> <!-- End Wrapper -->
     

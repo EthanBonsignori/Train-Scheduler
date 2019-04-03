@@ -45,6 +45,20 @@ body {
     margin-left: 22%;
     margin-right: 24%;
   }
+  #title-icon {
+    font-size: 2rem;
+    color: rgb(241, 203, 202);
+    position: absolute;
+    right: 0.3rem;
+    top: 0.5rem;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    outline: none;
+  }
+    #title-icon:hover {
+      text-shadow: 1px 1px 2px;
+    }
   #moon {
     font-size: 4rem;
     position: absolute;
