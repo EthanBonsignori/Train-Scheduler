@@ -1,8 +1,10 @@
+// Init audio selectors
+let trainAudio = document.getElementById('audio')
+let midnightTrain = document.getElementById('midnight-train')
 // Initialize audio
-let audio = document.getElementById('audio')
 // Set audio volume very low (background noise)
-audio.volume = 0.08
-audio.play()
+trainAudio.volume = 0.08
+trainAudio.play()
 
 // Initialize Firebase
 var config = {
@@ -124,6 +126,13 @@ let checkValidity = (name, dest, first, freq) => {
     destErr.text('')
     destErr.removeClass('active')
   }
+  let lcDest = dest.toLowerCase()
+  if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
+    $('#subtitle').text('to Georgia!')
+    trainAudio.pause()
+    midnightTrain.volume = 1
+    midnightTrain.play()
+  }
   // Check First Arrival input
   // regex (for when browsers don't support <input type="time">)
   const timeRegex = RegExp('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
@@ -169,14 +178,49 @@ $(document).on('click', '.error', function () {
 
 // Mute / Unmute the audio on click
 $(document).on('click', '#audio-toggle', function () {
-  let audio = document.getElementById('audio')
   $(this).toggleClass('play')
   $(this).toggleClass('fa-volume-up')
   if (!$(this).hasClass('play')) {
-    audio.volume = 0;
+    trainAudio.volume = 0
+    midnightTrain.volume = 0
   } else {
-    audio.volume = 0.08;
+    trainAudio.volume = 0.08
+    midnightTrain.volume = 1
   }
+})
+
+document.addEventListener('keydown', function (event) {
+  var esc = event.which == 27
+  var nl = event.which == 13
+  var el = event.target
+  var input = el.nodeName != 'INPUT' && el.nodeName != 'TEXTAREA'
+  var data = {}
+
+  if (input) {
+    if (esc) {
+      // restore state
+      document.execCommand('undo')
+      el.blur()
+    } else if (nl) {
+      // save
+      data[el.getAttribute('data-name')] = el.innerHTML
+
+      log(JSON.stringify(data))
+
+      el.blur();
+      event.preventDefault()
+    }
+  }
+}, true)
+
+function log(s) {
+  document.getElementById('debug').innerHTML = 'value changed to: ' + s;
+}
+
+// Play the train noise when Midnight train ends
+midnightTrain.addEventListener('ended', function () {
+  $('#subtitle').text('to wherever')
+  trainAudio.play()
 })
 
 // Add some placeholder to the first arrival inpu0t
