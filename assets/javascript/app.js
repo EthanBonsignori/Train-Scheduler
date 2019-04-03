@@ -121,7 +121,7 @@ let checkValidity = (name, dest, first, freq) => {
   // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
   if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
-    $('#subtitle').text('to Georgia!')
+    $('#subtitle').text('to Georgia')
     trainAudio.pause()
     midnightTrain.volume = 1
     midnightTrain.play()
