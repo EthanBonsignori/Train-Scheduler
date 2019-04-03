@@ -1,4 +1,8 @@
-let trainNames = []
+// Initialize audio
+let audio = document.getElementById('audio')
+// Set audio volume very low (background noise)
+audio.volume = 0.08
+audio.play()
 
 // Initialize Firebase
 var config = {
@@ -36,6 +40,8 @@ $(document).on('click', '#submit', function (event) {
   }
 })
 
+// Holds train names so they cannot be re-used
+let trainNames = []
 // Firebase watcher for new child
 dataRef.ref().on('child_added', function (snapshot) {
   trainNames.push(snapshot.val().trainName.toLowerCase())
@@ -55,7 +61,7 @@ let updateTrains = (snap) => {
   let minutesAway = times[1]
   // Add train to train schedule table
   let newRow = $('<tr>')
-  newRow.append(`<td>${snap.val().trainName}</td>`)
+  newRow.append(`<td><div contenteditable>${snap.val().trainName}</div></td>`)
   newRow.append(`<td>${snap.val().destination}</td>`)
   newRow.append(`<td>${snap.val().frequency}</td>`)
   newRow.append(`<td>${minutesAway}</td>`)
@@ -63,6 +69,7 @@ let updateTrains = (snap) => {
   $('#train-table').append(newRow)
 }
 
+// Calculate next time the train will arrive and how many minutes away
 const getTrainTime = (first, freq) => {
   // First Time (pushed back 1 year to make sure it comes before current time)
   let firstTimeConverted = moment(first, 'HH:mm').subtract(1, 'years')
@@ -154,6 +161,12 @@ let checkValidity = (name, dest, first, freq) => {
   }
 }
 
+$(document).on('click', '.error', function () {
+  console.log('Error click registered')
+  $(this).text('')
+  $(this).removeClass('active')
+}) 
+
 // Mute / Unmute the audio on click
 $(document).on('click', '#audio-toggle', function () {
   let audio = document.getElementById('audio')
@@ -166,8 +179,5 @@ $(document).on('click', '#audio-toggle', function () {
   }
 })
 
-// Set audio volume low
-let audio = document.getElementById('audio')
-audio.volume = 0.08
 // Add some placeholder to the first arrival inpu0t
-document.getElementById('train-first-arrival').value = '21:00'
+document.getElementById('train-first-arrival').value = moment().format('HH:mm')

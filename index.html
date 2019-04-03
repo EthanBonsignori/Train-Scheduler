@@ -22,7 +22,7 @@
     <!-- Page Content -->
     <div class="container">
 
-      <div id="jumbo" class="jumbotron jumbotron-fluid animated fadeInUp slow">
+      <div id="jumbo" class="jumbotron jumbotron-fluid animated fadeIn slow">
         <h1 id="title" class="display-2 text-center">Midnight Train
           <span id="moon"><i class="far fa-moon"></i></span>
           <span id="subtitle">to wherever</span>
@@ -34,10 +34,18 @@
       </div>
 
       <!-- Train Schedule -->
-      <div id="schedule-card" class="card">
-        <h5 class="card-header" style="color:#FDADAB"><i class="fas fa-calendar-alt"></i> Train Schedule</h5>
-        <div class="card-body">
-          <table class="table table-hover">
+      <div id="schedule-card" class="card animated fadeIn delay-1s slow">
+          <h5 class="card-header" style="color:#FDADAB">
+            <i class="fas fa-calendar-alt"></i> 
+             Train Schedule
+            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#table-collapse" aria-expanded="true" aria-controls="collapseTable">
+              <i class="fa fa-chevron-down"></i>
+            </button>
+          </h5>
+        </button>
+        <div id="table-collapse" class="collapse">
+          <div class="card-body">
+            <table class="table table-hover">
               <thead>
                 <tr>
                   <th scope="col">Train Name</th>
@@ -49,39 +57,48 @@
               </thead>
               <tbody id="train-table"><!-- New Trains Append Here--></tbody>
             </table>
-          </div>
-        </div> <!-- End Schedule Card-->
+          </div> <!-- End Card Body -->
+        </div> <!-- End Table Collapse -->
+      </div> <!-- End Schedule Card-->
 
         <!-- New Train Input -->
-        <div id="input-card" class="card">
-          <h5 class="card-header" style="color:#FCBBB5"><i class="fas fa-train"></i>  Add Train</h5>
-          <div class="card-body">
-            <!-- Train Form -->
-            <form id="train-form">
-              <div class="form-group">
-                <label for="train-name">Train Name</label>
-                <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
-                <span id="name-error" class="error" aria-live="polite"></span>
-              </div>
-              <div class="form-group">
-                <label for="train-destination">Destination</label>
-                <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
-                <span id="dest-error" class="error" aria-live="polite"></span>
-              </div>
-              <div class="form-group">
-                <label for="train-first-arrival">First Arrival Time</label>
-                <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
-                <span id="time-error" class="error" aria-live="polite"></span>
-              </div>
-              <div class="form-group">
-                <label for="train-frequency">Frequency (min)</label>
-                <input type="number" class="form-control" id="train-frequency" name="frequency" value="10" min="1" max="60" required>
-                <span id="freq-error" class="error" aria-live="polite"></span>
-              </div>
-              <button type="submit" id="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-          <img id="train-left-middle" src="assets/images/train-left-middle.png">
+        <div id="input-card" class="card animated fadeIn delay-2s slow">
+          <h5 class="card-header" style="color:#FCBBB5">
+            <i class="fas fa-train"></i>  
+            Add Train
+            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#input-collapse" aria-expanded="true" aria-controls="collapseTable">
+              <i class="fa fa-chevron-down"></i>
+            </button>
+          </h5>
+          <div id="input-collapse" class="collapse">
+            <div class="card-body">
+              <!-- Train Form -->
+              <form id="train-form">
+                <div class="form-group">
+                  <label for="train-name">Train Name</label>
+                  <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
+                  <span id="name-error" class="error" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="train-destination">Destination</label>
+                  <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
+                  <span id="dest-error" class="error" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="train-first-arrival">First Arrival Time</label>
+                  <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
+                  <span id="time-error" class="error" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="train-frequency">Frequency (min)</label>
+                  <input type="number" class="form-control" id="train-frequency" name="frequency" value="10" min="1" max="60" required>
+                  <span id="freq-error" class="error" aria-live="polite"></span>
+                </div>
+                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+            <img id="train-left-middle" src="assets/images/train-left-middle.png">
+          </div> <!-- End Input Collapse -->
         </div><!-- End Input Card-->
 
       <!-- Choo Choo -->
