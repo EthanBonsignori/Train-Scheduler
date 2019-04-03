@@ -1,10 +1,6 @@
 // Init audio selectors
 let trainAudio = document.getElementById('audio')
 let midnightTrain = document.getElementById('midnight-train')
-// Initialize audio
-// Set audio volume very low (background noise)
-trainAudio.volume = 0.08
-trainAudio.play()
 
 // Initialize Firebase
 var config = {
@@ -18,11 +14,12 @@ var config = {
 
 firebase.initializeApp(config)
 let dataRef = firebase.database()
+console.log(dataRef.ref('bootcamp-2019/'))
 
 $(document).on('click', '#submit', function (event) {
-  // checkInputValidity()
   event.preventDefault()
-  // Get user input
+  
+  // Get user inputj
   let trainName = $('#train-name').val().trim()
   let destination = $('#train-destination').val().trim()
   let firstArrival = $('#train-first-arrival').val().trim()
@@ -39,6 +36,7 @@ $(document).on('click', '#submit', function (event) {
       frequency: frequency,
       dateAdded: firebase.database.ServerValue.TIMESTAMP
     })
+    inputFormAnimate($(this))
   }
 })
 
@@ -47,6 +45,7 @@ let trainNames = []
 // Firebase watcher for new child
 dataRef.ref().on('child_added', function (snapshot) {
   trainNames.push(snapshot.val().trainName.toLowerCase())
+  console.log('---- Used Train Names ----')
   console.log(trainNames)
   updateTrains(snapshot)
   // On error,
@@ -75,23 +74,15 @@ let updateTrains = (snap) => {
 const getTrainTime = (first, freq) => {
   // First Time (pushed back 1 year to make sure it comes before current time)
   let firstTimeConverted = moment(first, 'HH:mm').subtract(1, 'years')
-  console.log(firstTimeConverted)
-  // Current Time
-  let currentTime = moment()
-  console.log(`CURRENT TIME: ${moment(currentTime).format('hh:mm')}`)
   // Difference between the times
   let diffTime = moment().diff(moment(firstTimeConverted), 'minutes')
-  console.log(`DIFFERENCE IN TIME: ${diffTime}`)
   // Time apart (remainder)
   let remainder = diffTime % freq
   // Minute(s) Until Train
   let minsUntil = freq - remainder
-  console.log(`MINUTES TILL TRAIN: ${minsUntil}`)
   // Next Train
   let nextTrain = moment().add(minsUntil, 'minutes')
   let nextTrainConverted = moment(nextTrain).format('hh:mm A')
-  console.log(`ARRIVAL TIME: ${nextTrainConverted}`)
-
   return [minsUntil, nextTrainConverted]
 }
 
@@ -126,6 +117,8 @@ let checkValidity = (name, dest, first, freq) => {
     destErr.text('')
     destErr.removeClass('active')
   }
+  // Play midnight train if destination includes ga or georgia
+  // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
   if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
     $('#subtitle').text('to Georgia!')
@@ -171,7 +164,6 @@ let checkValidity = (name, dest, first, freq) => {
 }
 
 $(document).on('click', '.error', function () {
-  console.log('Error click registered')
   $(this).text('')
   $(this).removeClass('active')
 }) 
@@ -185,10 +177,22 @@ $(document).on('click', '#audio-toggle', function () {
     midnightTrain.volume = 0
   } else {
     trainAudio.volume = 0.08
-    midnightTrain.volume = 1
+    midnightTrain.volume = 0.7
   }
 })
 
+// Animate submit train
+let inputFormAnimate = (btn) => {
+  console.log('registerd')
+  $('.send-animate').addClass('is-sent')
+  setTimeout(function () {
+    $('.send-animate').removeClass('is-sent')
+  }, 1800)
+}
+
+// Initialize audio
+// Set audio volume very low (background noise)
+trainAudio.volume = 0.08
 // Play the train noise when Midnight train ends
 midnightTrain.addEventListener('ended', function () {
   $('#subtitle').text('to wherever')

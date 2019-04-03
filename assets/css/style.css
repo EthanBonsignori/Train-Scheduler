@@ -228,6 +228,45 @@ input:focus:invalid {
   @keyframes choochooLeftMiddle {
     100% {transform: translateX(-600vw)}
   }
+
+.send-animate {
+  -webkit-transition: opacity 300ms ease-in-out;
+          transition: opacity 300ms ease-in-out;
+}
+.is-sent {
+  -webkit-animation: launch 1.5 ease-in-out;
+          animation: launch 1.5s ease-in-out;
+}
+  @keyframes launch {
+    0% {
+      opacity: 1;
+      -webkit-transform: translateY(0) scale(1);
+              transform: translateY(0) scale(1);
+    }
+    10%, 15% {
+      -webkit-transform: translateY(20px);
+              transform: translateY(20px);
+    }
+    40%, 70% {
+      -webkit-transform: translateY(-600px) scale(1);
+              transform: translateY(-600px) scale(1);
+    }
+    71%, 72% {
+      opacity: 0;
+      -webkit-transform: translateY(-600px) scale(0.6);
+              transform: translateY(-600px) scale(0.6);
+    }
+    73%, 74% {
+      opacity: 0;
+      -webkit-transform: translateY(0px) scale(0.6);
+              transform: translateY(0px) scale(0.6);
+    }
+    99%, 100% {
+      opacity: 1;
+      -webkit-transform: translateY(0px) scale(1);
+              transform: translateY(0px) scale(1);
+    }
+  }
   
 
  
