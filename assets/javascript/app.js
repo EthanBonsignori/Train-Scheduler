@@ -189,34 +189,6 @@ $(document).on('click', '#audio-toggle', function () {
   }
 })
 
-document.addEventListener('keydown', function (event) {
-  var esc = event.which == 27
-  var nl = event.which == 13
-  var el = event.target
-  var input = el.nodeName != 'INPUT' && el.nodeName != 'TEXTAREA'
-  var data = {}
-
-  if (input) {
-    if (esc) {
-      // restore state
-      document.execCommand('undo')
-      el.blur()
-    } else if (nl) {
-      // save
-      data[el.getAttribute('data-name')] = el.innerHTML
-
-      log(JSON.stringify(data))
-
-      el.blur();
-      event.preventDefault()
-    }
-  }
-}, true)
-
-function log(s) {
-  document.getElementById('debug').innerHTML = 'value changed to: ' + s;
-}
-
 // Play the train noise when Midnight train ends
 midnightTrain.addEventListener('ended', function () {
   $('#subtitle').text('to wherever')
