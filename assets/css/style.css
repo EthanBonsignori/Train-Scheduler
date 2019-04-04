@@ -121,6 +121,39 @@ body {
   .table tbody td {
     border-top: 1px solid #FCE9E8;
   }
+  .edit {
+    padding: 0;
+    border: none;
+    background: none;
+    -webkit-appearance: none;
+    outline: none;
+  }
+  
+#edit-modal-dialog {
+  width: 100%;
+  max-width: 100%;
+}
+  #edit-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  #save-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #save-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 1.5rem;
+  }
+  #exit-button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+  }
 
 /* New Train Input */
 input[type=text] {

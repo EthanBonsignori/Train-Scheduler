@@ -24,7 +24,7 @@
           <span id="moon"><i class="far fa-moon"></i></span>
           <span id="subtitle">to wherever</span>
           <i id="audio-toggle" class="fas fa-volume-up fa-volume-mute play"></i>
-          <button type="button" id="title-icon" data-toggle="modal" data-target="#infoModal">
+          <button type="button" id="title-icon" data-toggle="modal" data-target="#info-modal">
               <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Info"></i>
           </button>
         </h1>
@@ -53,6 +53,38 @@
                 </tr>
               </thead>
               <tbody id="train-table"><!-- New Trains Append Here--></tbody>
+              <!-- Edit Modal -->
+              <div class="modal" id="edit-modal" tabindex="10" role="edit" aria-labelledby="edit-modal" aria-hidden="true">
+                <div class="modal-dialog" id="edit-modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <form id="edit-form">
+                        <div class="row">
+                          <div class="col">
+                            <!-- Edit Train Name -->
+                            <label for="new-train-name">Train Name</label>
+                            <input type="text" class="form-control" id="new-train-name" minlength="3" maxlength ="20" required>
+                          </div>
+                          <div class="col">
+                            <!-- Edit Desination -->
+                            <label for="new-train-destination">Destination</label>
+                            <input type="text" class="form-control" id="new-train-destination" minlength="3" maxlength ="20" required>
+                          </div>
+                          <div class="col">
+                            <!-- Edit Frequency -->
+                            <label for="new-train-frequency">Frequency (min)</label>
+                            <input type="number" class="form-control" id="new-train-frequency" value="10" min="1" max="60" required>
+                          </div>
+                          <div class="col" id="save-button-container">
+                            <button class="btn btn-success" id="save-button">Save</button>
+                            <button class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>     
             </table>
           </div> <!-- End Card Body -->
         </div> <!-- End Table Collapse -->
@@ -89,7 +121,7 @@
                   </div>
                   <div class="form-group">
                     <label for="train-frequency">Frequency (min)</label>
-                    <input type="number" class="form-control" id="train-frequency" name="frequency" value="10" min="1" max="60" required>
+                    <input type="number" class="form-control" id="train-frequency" value="10" min="1" max="60" required>
                     <span id="freq-error" class="error" aria-live="polite"></span>
                   </div>
                   <button type="submit" id="submit" class="btn btn-primary">Submit</button>
@@ -113,11 +145,11 @@
         </audio>
         
         <!-- Information Modal -->
-        <div class="modal fade" id="infoModal" tabindex="10" role="dialog" aria-labelledby="infoModal" aria-hidden="true">
+        <div class="modal fade" id="info-modal" tabindex="10" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="indoModalTitle">About</h5>
+                <h5 class="modal-title">About</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -130,13 +162,14 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>                                                               
 
       </div> <!-- End Container -->
     </div> <!-- End Wrapper -->
     
     <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
     <!-- Bootstrap JavaScript -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

@@ -1,6 +1,6 @@
 // Init audio selectors
-let trainAudio = document.getElementById('audio')
-let midnightTrain = document.getElementById('midnight-train')
+const trainAudio = document.getElementById('audio')
+const midnightTrain = document.getElementById('midnight-train')
 
 // Initialize Firebase
 var config = {
@@ -18,8 +18,8 @@ console.log(dataRef.ref('bootcamp-2019/'))
 
 $(document).on('click', '#submit', function (event) {
   event.preventDefault()
-  
-  // Get user inputj
+
+  // Get user input
   let trainName = $('#train-name').val().trim()
   let destination = $('#train-destination').val().trim()
   let firstArrival = $('#train-first-arrival').val().trim()
@@ -37,6 +37,9 @@ $(document).on('click', '#submit', function (event) {
       dateAdded: firebase.database.ServerValue.TIMESTAMP
     })
     inputFormAnimate($(this))
+    // Reset form fields
+    $('#train-form').find('input:text, textarea').val('')
+    document.getElementById('train-first-arrival').value = moment().format('HH:mm')
   }
 })
 
@@ -56,19 +59,31 @@ dataRef.ref().on('child_added', function (snapshot) {
 let updateTrains = (snap) => {
   let first = snap.val().firstArrival
   let freq = snap.val().frequency
+  let id = snap.key
   // Returns converted time values
   let times = getTrainTime(first, freq)
-  let nextArrival = times[0]
-  let minutesAway = times[1]
+  let minutesAway = times[0]
+  let nextArrival = times[1]
   // Add train to train schedule table
   let newRow = $('<tr>')
+  newRow.attr('data-id', id)
   newRow.append(`<td><div contenteditable>${snap.val().trainName}</div></td>`)
   newRow.append(`<td>${snap.val().destination}</td>`)
   newRow.append(`<td>${snap.val().frequency}</td>`)
-  newRow.append(`<td>${minutesAway}</td>`)
   newRow.append(`<td>${nextArrival}</td>`)
+  newRow.append(`<td>${minutesAway}</td>`)
+  newRow.append(`<td> 
+                  <button class="edit" data-id="${id}" data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </td>`)
   $('#train-table').append(newRow)
 }
+
+$(document).on('click', '.edit', function () {
+  let edit = $(this).attr('data-id')
+
+})
 
 // Calculate next time the train will arrive and how many minutes away
 const getTrainTime = (first, freq) => {
