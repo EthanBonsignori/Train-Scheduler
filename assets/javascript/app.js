@@ -96,16 +96,21 @@ $(document).on('click', '.edit', function () {
   $('#save-button').click(function (e) {
     e.preventDefault()
     isUpdate = true
+    // Get text from inputs
     let trainName = $('#new-train-name').val()
     let destination = $('#new-train-dest').val()
     let frequency = $('#new-train-freq').val()
-    checkValidity(trainName, destination, null, frequency, isUpdate)
-
-    db.ref(editID).update({
-      trainName: trainName,
-      destination: destination,
-      frequency: frequency
-    })
+    // Check new inputs to make sure they are valid
+    let updateValid = checkValidity(trainName, destination, null, frequency, isUpdate)
+    // Update database with new values if they are valid
+    if (updateValid) {
+      db.ref(editID).update({
+        trainName: trainName,
+        destination: destination,
+        frequency: frequency
+      })
+      $('#edit-modal').modal('toggle')
+    }
   })
 
   $('#exit-button').click(function (e) {
@@ -178,6 +183,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
     midnightTrain.volume = 1
     midnightTrain.play()
   }
+  // Only check this if adding new train and not updating a previous one
   if (!isUpdate) {
     // Check First Arrival input
     // regex (for when browsers don't support <input type="time">)

@@ -64,19 +64,22 @@
                             <!-- Edit Train Name -->
                             <label for="new-train-name">Train Name</label>
                             <input type="text" class="form-control" id="new-train-name" minlength="3" maxlength ="20" required>
+                            <span id="name-error-update" class="error" aria-live="polite"></span>
                           </div>
                           <div class="col">
                             <!-- Edit Desination -->
                             <label for="new-train-destination">Destination</label>
                             <input type="text" class="form-control" id="new-train-dest" minlength="3" maxlength ="20" required>
+                            <span id="dest-error-update" class="error" aria-live="polite"></span>
                           </div>
                           <div class="col">
                             <!-- Edit Frequency -->
                             <label for="new-train-frequency">Frequency (min)</label>
                             <input type="number" class="form-control" id="new-train-freq" min="1" max="60" required>
+                            <span id="freq-error-update" class="error" aria-live="polite"></span>
                           </div>
                           <div class="col" id="save-button-container">
-                            <button type="submit" class="btn btn-success" id="save-button" data-toggle="modal" data-target="#edit-modal">Save</button>
+                            <button type="submit" class="btn btn-success" id="save-button">Save</button>
                             <button type="submit" class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
                           </div>
                         </div>
