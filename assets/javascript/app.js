@@ -112,11 +112,14 @@ $(document).on('click', '.edit', function () {
       $('#edit-modal').modal('toggle')
     }
   })
-
   $('#exit-button').click(function (e) {
     e.preventDefault()
     isUpdate = false
   })
+})
+
+db.ref().on('child_changed', function (snapshot) {
+  updateTrains(snapshot)
 })
 
 // Calculate next time the train will arrive and how many minutes away
@@ -177,7 +180,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Play midnight train if destination includes ga or georgia
   // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
-  if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
+  if ( lcDest.includes(' ga') || lcDest.includes('georgia') ) {
     $('#subtitle').text('to Georgia')
     trainAudio.pause()
     midnightTrain.volume = 1
