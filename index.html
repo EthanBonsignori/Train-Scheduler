@@ -68,16 +68,16 @@
                           <div class="col">
                             <!-- Edit Desination -->
                             <label for="new-train-destination">Destination</label>
-                            <input type="text" class="form-control" id="new-train-destination" minlength="3" maxlength ="20" required>
+                            <input type="text" class="form-control" id="new-train-dest" minlength="3" maxlength ="20" required>
                           </div>
                           <div class="col">
                             <!-- Edit Frequency -->
                             <label for="new-train-frequency">Frequency (min)</label>
-                            <input type="number" class="form-control" id="new-train-frequency" value="10" min="1" max="60" required>
+                            <input type="number" class="form-control" id="new-train-freq" min="1" max="60" required>
                           </div>
                           <div class="col" id="save-button-container">
-                            <button class="btn btn-success" id="save-button">Save</button>
-                            <button class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
+                            <button type="submit" class="btn btn-success" id="save-button" data-toggle="modal" data-target="#edit-modal">Save</button>
+                            <button type="submit" class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
                           </div>
                         </div>
                       </form>

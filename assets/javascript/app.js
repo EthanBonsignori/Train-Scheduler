@@ -1,6 +1,7 @@
 // Init audio selectors
 const trainAudio = document.getElementById('audio')
 const midnightTrain = document.getElementById('midnight-train')
+let isUpdate = false
 
 // Initialize Firebase
 var config = {
@@ -13,8 +14,8 @@ var config = {
 }
 
 firebase.initializeApp(config)
-let dataRef = firebase.database()
-console.log(dataRef.ref('bootcamp-2019/'))
+let db = firebase.database()
+console.log(db.ref('bootcamp-2019/'))
 
 $(document).on('click', '#submit', function (event) {
   event.preventDefault()
@@ -29,14 +30,14 @@ $(document).on('click', '#submit', function (event) {
   // Only continue if the checkValidity() function returns true
   if (inputValid) {
     // Push input to firebase
-    dataRef.ref().push({
+    db.ref().push({
       trainName: trainName,
       destination: destination,
       firstArrival: firstArrival,
       frequency: frequency,
       dateAdded: firebase.database.ServerValue.TIMESTAMP
     })
-    inputFormAnimate($(this))
+    inputFormAnimate()
     // Reset form fields
     $('#train-form').find('input:text, textarea').val('')
     document.getElementById('train-first-arrival').value = moment().format('HH:mm')
@@ -46,7 +47,7 @@ $(document).on('click', '#submit', function (event) {
 // Holds train names so they cannot be re-used
 let trainNames = []
 // Firebase watcher for new child
-dataRef.ref().on('child_added', function (snapshot) {
+db.ref().on('child_added', function (snapshot) {
   trainNames.push(snapshot.val().trainName.toLowerCase())
   console.log('---- Used Train Names ----')
   console.log(trainNames)
@@ -67,7 +68,7 @@ let updateTrains = (snap) => {
   // Add train to train schedule table
   let newRow = $('<tr>')
   newRow.attr('data-id', id)
-  newRow.append(`<td><div contenteditable>${snap.val().trainName}</div></td>`)
+  newRow.append(`<td>${snap.val().trainName}</td>`)
   newRow.append(`<td>${snap.val().destination}</td>`)
   newRow.append(`<td>${snap.val().frequency}</td>`)
   newRow.append(`<td>${nextArrival}</td>`)
@@ -81,8 +82,36 @@ let updateTrains = (snap) => {
 }
 
 $(document).on('click', '.edit', function () {
-  let edit = $(this).attr('data-id')
+  // Get the id of the clicked button
+  let editID = $(this).attr('data-id')
+  // Find the element clicked on in probably the ugliest way possible
+  let namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
+  let destPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(1).text()
+  let freqPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(2).text()
+  // Set the edit input placeholder text to the element clicked on
+  $('#new-train-name').attr('placeholder', namePlaceHolder)
+  $('#new-train-dest').attr('placeholder', destPlaceHolder)
+  $('#new-train-freq').attr('placeholder', freqPlaceHolder)
+  // Listen for clicks on save
+  $('#save-button').click(function (e) {
+    e.preventDefault()
+    isUpdate = true
+    let trainName = $('#new-train-name').val()
+    let destination = $('#new-train-dest').val()
+    let frequency = $('#new-train-freq').val()
+    checkValidity(trainName, destination, null, frequency, isUpdate)
 
+    db.ref(editID).update({
+      trainName: trainName,
+      destination: destination,
+      frequency: frequency
+    })
+  })
+
+  $('#exit-button').click(function (e) {
+    e.preventDefault()
+    isUpdate = false
+  })
 })
 
 // Calculate next time the train will arrive and how many minutes away
@@ -102,12 +131,20 @@ const getTrainTime = (first, freq) => {
 }
 
 // Only allows train to be added if it meets necessary requirements
-let checkValidity = (name, dest, first, freq) => {
-  // Select the error html elements for each input field
-  let nameErr = $('#name-error')
-  let destErr = $('#dest-error')
-  let timeErr = $('#time-error')
-  let freqErr = $('#freq-error')
+let checkValidity = (name, dest, first, freq, isUpdate) => {
+  // Check if running validity check on update or add new train
+  let nameErr, destErr, timeErr, freqErr
+  if (isUpdate) {
+    nameErr = $('#name-error-update')
+    destErr = $('#dest-error-update')
+    freqErr = $('#freq-error-update')
+  } else {
+    // Select the error html elements for each input field
+    nameErr = $('#name-error')
+    destErr = $('#dest-error')
+    timeErr = $('#time-error')
+    freqErr = $('#freq-error')
+  }
   // Will count up for each error and only allow the script to continue if there are 0 errors
   let err = 0
   // Check Train Name input
@@ -141,21 +178,23 @@ let checkValidity = (name, dest, first, freq) => {
     midnightTrain.volume = 1
     midnightTrain.play()
   }
-  // Check First Arrival input
-  // regex (for when browsers don't support <input type="time">)
-  const timeRegex = RegExp('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
-  let checkTime = timeRegex.test(first)
-  if (first === '') {
-    timeErr.text(' First Arrival is required. (HH:mm) ')
-    timeErr.addClass('active')
-    err++
-  } else if (!checkTime) {
-    timeErr.text(' First Arrival must be typed in military time (HH:mm) ')
-    timeErr.addClass('active')
-    err++
-  } else {
-    timeErr.text('')
-    timeErr.removeClass('active')
+  if (!isUpdate) {
+    // Check First Arrival input
+    // regex (for when browsers don't support <input type="time">)
+    const timeRegex = RegExp('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
+    let checkTime = timeRegex.test(first)
+    if (first === '') {
+      timeErr.text(' First Arrival is required. (HH:mm) ')
+      timeErr.addClass('active')
+      err++
+    } else if (!checkTime) {
+      timeErr.text(' First Arrival must be typed in military time (HH:mm) ')
+      timeErr.addClass('active')
+      err++
+    } else {
+      timeErr.text('')
+      timeErr.removeClass('active')
+    }
   }
   // Check Frequency input
   if (freq === '') {
@@ -197,7 +236,7 @@ $(document).on('click', '#audio-toggle', function () {
 })
 
 // Animate submit train
-let inputFormAnimate = (btn) => {
+let inputFormAnimate = () => {
   console.log('registerd')
   $('.send-animate').addClass('is-sent')
   setTimeout(function () {
