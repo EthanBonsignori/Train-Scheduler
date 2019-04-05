@@ -3,33 +3,6 @@ const trainAudio = document.getElementById('audio')
 const midnightTrain = document.getElementById('midnight-train')
 let isUpdate = false
 
-$(document).on('click', '#submit', function (event) {
-  event.preventDefault()
-
-  // Get user input
-  let trainName = $('#train-name').val().trim()
-  let destination = $('#train-destination').val().trim()
-  let firstArrival = $('#train-first-arrival').val().trim()
-  let frequency = $('#train-frequency').val().trim()
-  // Check the user input
-  let inputValid = checkValidity(trainName, destination, firstArrival, frequency)
-  // Only continue if the checkValidity() function returns true
-  if (inputValid) {
-    // Push input to firebase
-    db.collection('trains').add({
-      trainName: trainName,
-      destination: destination,
-      firstArrival: firstArrival,
-      frequency: frequency,
-      dateAdded: firebase.database.ServerValue.TIMESTAMP
-    })
-    inputFormAnimate()
-    // Reset form fields
-    $('#train-form').find('input:text, textarea').val('')
-    document.getElementById('train-first-arrival').value = moment().format('HH:mm')
-  }
-})
-
 // Calculate next time the train will arrive and how many minutes away
 let getTrainTime = (first, freq) => {
   // First Time (pushed back 1 year to make sure it comes before current time)
@@ -46,22 +19,56 @@ let getTrainTime = (first, freq) => {
   return [minsUntil, nextTrainConverted]
 }
 
+// Create new train
+const trainForm = $('#input-card')
+trainForm.on('submit', (e) => {
+  e.preventDefault()
+  // Get user input
+  let trainName = $('#train-name').val().trim()
+  let destination = $('#train-destination').val().trim()
+  let firstArrival = $('#train-first-arrival').val().trim()
+  let frequency = $('#train-frequency').val().trim()
+  // Check the user input
+  let inputValid = checkValidity(trainName, destination, firstArrival, frequency)
+  // Only continue if the checkValidity function returns true
+  if (inputValid) {
+    // Push input to firebase
+    db.collection('trains').add({
+      trainName: trainName,
+      destination: destination,
+      firstArrival: firstArrival,
+      frequency: frequency,
+      dateAdded: new Date()
+    }).then(() => {
+      inputFormAnimate()
+      // Reset form fields
+      $('#train-form').find('input:text, textarea').val('')
+      document.getElementById('train-first-arrival').value = moment().format('HH:mm')
+    }).catch(error => {
+      console.log(error.message)
+    })
+  }
+})
+
 // Holds train names so they cannot be re-used
 let trainNames = []
+// Create trains from firestore data
 const trainTable = $('#train-table')
 let createTrains = (data) => {
   if (data.length) {
     let html = ''
+    // reset the train name array
+    trainNames = []
     data.forEach(doc => {
       const train = doc.data()
-      let id = doc.key
+      let id = doc.id
       trainNames.push(train.trainName.toLowerCase())
       // Returns converted time values
       let times = getTrainTime(train.firstArrival, train.frequency)
       let minutesAway = times[0]
       let nextArrival = times[1]
       const tr = `
-        <tr>
+        <tr data-id="${id}">
           <td>${train.trainName}</td>
           <td>${train.destination}</td>
           <td>${train.frequency}</td>
@@ -77,13 +84,16 @@ let createTrains = (data) => {
           </td>
         </tr>
       `
+      // Add all the html markup to a variable
       html += tr
     })
+    // Set the html of train table to dynamically created train data from firestore
     $('#train-table').html(html)
     // Get tooltips
     $('[data-toggle="tooltip"]').tooltip()
   } else {
-    $('#train-table').html('<h5 class="text-center mt-4"><i class="fas fa-exclamation-triangle"></i> Login to view trains</h5>')
+    // Show 'Login to view trains' if the user is not logged in
+    $('#train-table').html('<h5 class="text-center mt-4 logged-out-text"><i class="fas fa-exclamation-triangle"></i> Login to view trains</h5>')
   }
 }
 
@@ -94,12 +104,12 @@ $(document).on('click', '.edit', function () {
   let namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
   let destPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(1).text()
   let freqPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(2).text()
-  // Set the edit input placeholder text to the element clicked on
+  // Set the edit input placeholder text so it matches the element the user wants to edit
   $('#new-train-name').val(namePlaceHolder)
   $('#new-train-dest').val(destPlaceHolder)
   $('#new-train-freq').val(freqPlaceHolder)
   // Listen for clicks on save
-  $('#save-button').click(function (e) {
+  $('#save-button').click((e) => {
     e.preventDefault()
     isUpdate = true
     // Get text from inputs
@@ -110,7 +120,7 @@ $(document).on('click', '.edit', function () {
     let updateValid = checkValidity(trainName, destination, null, frequency, isUpdate)
     // Update database with new values if they are valid
     if (updateValid) {
-      db.ref(editID).update({
+      db.doc(`/trains/${editID}`).update({
         trainName: trainName,
         destination: destination,
         frequency: frequency
@@ -124,6 +134,7 @@ $(document).on('click', '.edit', function () {
   })
 })
 
+// OLD FIREBASE REALTIME DATABASE UPDATER
 // // Listens for edits and displays them to every instance of the page that's open
 // db.collection('trains').on('child_changed', function (snapshot) {
 //   let editID = snapshot.key

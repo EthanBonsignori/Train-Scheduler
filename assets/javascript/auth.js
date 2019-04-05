@@ -1,14 +1,30 @@
+// Hide and show html elements based on whether user is logged in or out
+const userLoggedOut = document.querySelectorAll('.logged-out')
+const userLoggedIn = document.querySelectorAll('.logged-in')
+
+const setupUI = (user) => {
+  if (user) {
+    userLoggedIn.forEach(item => item.style.display = 'block')
+    userLoggedOut.forEach(item => item.style.display = 'none')
+  } else {
+    userLoggedIn.forEach(item => item.style.display = 'none')
+    userLoggedOut.forEach(item => item.style.display = 'block')
+  }
+}
+
 // Listen for auth status changes
 auth.onAuthStateChanged(user => {
   if (user) {
     console.log('User logged in', user)
-    db.collection('trains').get()
-      .then(snapshot => {
-        createTrains(snapshot.docs)
-      })
+    // Grab train info on any change in the database
+    db.collection('trains').onSnapshot(snapshot => {
+      createTrains(snapshot.docs)
+      setupUI(user)
+    })
   } else {
     console.log('User logged out')
     // Run function without data if user is not logged in
+    setupUI()
     createTrains([])
   }
 })

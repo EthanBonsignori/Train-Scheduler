@@ -50,7 +50,7 @@
                 Create Account
               </button>
             </div><!-- End Logged Out Display -->
-            <div class="logged-in">
+            <div class="logged-in text-center">
               <button class="btn btn-danger" id="logout">Logout</button>
             </div>
           </div>
@@ -121,43 +121,45 @@
       </div> <!-- End Schedule Card-->
 
         <!-- New Train Input -->
-        <div id="input-card" class="card send-animate">
-          <h5 class="card-header">
-            <i class="fas fa-train"></i>  
-            Add Train
-            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#input-collapse" aria-expanded="false" aria-controls="collapse-add-train">
-              <i class="fa fa-chevron-down"></i>
-            </button>
-          </h5>
-          <div id="input-collapse" class="collapse">
-            <div class="card-body">
-              <!-- Train Form -->
-              <form id="train-form">
-                <div class="form-group">
-                  <label for="train-name">Train Name</label>
-                  <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
-                  <span id="name-error" class="error" aria-live="polite"></span>
-                </div>
-                <div class="form-group">
-                  <label for="train-destination">Destination</label>
-                  <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
-                  <span id="dest-error" class="error" aria-live="polite"></span>
-                </div>
-                <div class="form-group">
-                  <label for="train-first-arrival">First Arrival Time</label>
-                  <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
-                  <span id="time-error" class="error" aria-live="polite"></span>
-                </div>
-                <div class="form-group">
-                  <label for="train-frequency">Frequency (min)</label>
-                  <input type="number" class="form-control" id="train-frequency" value="10" min="1" max="60" required>
-                  <span id="freq-error" class="error" aria-live="polite"></span>
-                </div>
-                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div> <!-- End Input Collapse -->
-        </div><!-- End Input Card-->
+        <div class="logged-in">
+          <div id="input-card" class="card send-animate">
+            <h5 class="card-header">
+              <i class="fas fa-train"></i>  
+              Add Train
+              <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#input-collapse" aria-expanded="false" aria-controls="collapse-add-train">
+                <i class="fa fa-chevron-down"></i>
+              </button>
+            </h5>
+            <div id="input-collapse" class="collapse">
+              <div class="card-body">
+                <!-- Train Form -->
+                <form id="train-form">
+                  <div class="form-group">
+                    <label for="train-name">Train Name</label>
+                    <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
+                    <span id="name-error" class="error" aria-live="polite"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="train-destination">Destination</label>
+                    <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
+                    <span id="dest-error" class="error" aria-live="polite"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="train-first-arrival">First Arrival Time</label>
+                    <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
+                    <span id="time-error" class="error" aria-live="polite"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="train-frequency">Frequency (min)</label>
+                    <input type="number" class="form-control" id="train-frequency" value="10" min="1" max="60" required>
+                    <span id="freq-error" class="error" aria-live="polite"></span>
+                  </div>
+                  <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+            </div> <!-- End Input Collapse -->
+          </div><!-- End Input Card-->
+        </div>
 
         <!-- Choo Choo -->
         <img id="train-right-top"   src="assets/images/train-right-top.png">

@@ -78,7 +78,11 @@ body {
     text-shadow: 1px 1px 6px;
   }
 
-/* Account Buttons */ 
+/* Account Buttons */
+.logged-in, .logged-out {
+  display: none;
+} 
+
 .card-body #login, .card-body #create-account {
   margin-right: 1.5rem;
   margin-left: 5rem;
@@ -159,6 +163,9 @@ body {
     border: none;
     background: none;
     -webkit-appearance: none;
+    outline: none;
+  }
+  .edit:focus {
     outline: none;
   }
 
