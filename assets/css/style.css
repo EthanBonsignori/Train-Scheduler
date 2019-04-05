@@ -128,7 +128,7 @@ body {
     -webkit-appearance: none;
     outline: none;
   }
-  
+
 #edit-modal-dialog {
   width: 100%;
   max-width: 100%;
@@ -137,6 +137,9 @@ body {
     position: absolute;
     top: 0;
     right: 0;
+  }
+  #edit-modal input {
+    color: #000;
   }
   #save-button-container{
     display: flex;

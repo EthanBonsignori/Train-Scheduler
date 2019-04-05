@@ -51,13 +51,13 @@ db.ref().on('child_added', function (snapshot) {
   trainNames.push(snapshot.val().trainName.toLowerCase())
   console.log('---- Used Train Names ----')
   console.log(trainNames)
-  updateTrains(snapshot)
+  createTrains(snapshot)
   // On error,
 }, function (errorObject) {
   console.log(`Errors on child_added: ${errorObject.code}`)
 })
 
-let updateTrains = (snap) => {
+let createTrains = (snap) => {
   let first = snap.val().firstArrival
   let freq = snap.val().frequency
   let id = snap.key
@@ -89,9 +89,9 @@ $(document).on('click', '.edit', function () {
   let destPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(1).text()
   let freqPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(2).text()
   // Set the edit input placeholder text to the element clicked on
-  $('#new-train-name').attr('placeholder', namePlaceHolder)
-  $('#new-train-dest').attr('placeholder', destPlaceHolder)
-  $('#new-train-freq').attr('placeholder', freqPlaceHolder)
+  $('#new-train-name').val(namePlaceHolder)
+  $('#new-train-dest').val(destPlaceHolder)
+  $('#new-train-freq').val(freqPlaceHolder)
   // Listen for clicks on save
   $('#save-button').click(function (e) {
     e.preventDefault()
@@ -118,8 +118,19 @@ $(document).on('click', '.edit', function () {
   })
 })
 
+// Listens for edits and displays them to every instance of the page that's open
 db.ref().on('child_changed', function (snapshot) {
-  updateTrains(snapshot)
+  let editID = snapshot.key
+
+  $('#train-table > tr').each(function () {
+    let trID = $(this).data('id')
+    if (trID === editID) {
+      console.log(snapshot.val().trainName)
+      $(this).children('td').eq(0).text(snapshot.val().trainName)
+      $(this).children('td').eq(1).text(snapshot.val().destination)
+      $(this).children('td').eq(2).text(snapshot.val().frequency)
+    }
+  })
 })
 
 // Calculate next time the train will arrive and how many minutes away
