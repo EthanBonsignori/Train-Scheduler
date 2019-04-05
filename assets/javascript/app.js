@@ -16,7 +16,7 @@ $(document).on('click', '#submit', function (event) {
   // Only continue if the checkValidity() function returns true
   if (inputValid) {
     // Push input to firebase
-    db.ref().push({
+    db.collection('trains').add({
       trainName: trainName,
       destination: destination,
       firstArrival: firstArrival,
@@ -30,46 +30,61 @@ $(document).on('click', '#submit', function (event) {
   }
 })
 
+// Calculate next time the train will arrive and how many minutes away
+let getTrainTime = (first, freq) => {
+  // First Time (pushed back 1 year to make sure it comes before current time)
+  let firstTimeConverted = moment(first, 'HH:mm').subtract(1, 'years')
+  // Difference between the times
+  let diffTime = moment().diff(moment(firstTimeConverted), 'minutes')
+  // Time apart (remainder)
+  let remainder = diffTime % freq
+  // Minute(s) Until Train
+  let minsUntil = freq - remainder
+  // Next Train
+  let nextTrain = moment().add(minsUntil, 'minutes')
+  let nextTrainConverted = moment(nextTrain).format('hh:mm A')
+  return [minsUntil, nextTrainConverted]
+}
+
 // Holds train names so they cannot be re-used
 let trainNames = []
-// Firebase watcher for new child
-db.ref().on('child_added', function (snapshot) {
-  trainNames.push(snapshot.val().trainName.toLowerCase())
-  console.log('---- Used Train Names ----')
-  console.log(trainNames)
-  createTrains(snapshot)
-  // On error,
-}, function (errorObject) {
-  console.log(`Errors on child_added: ${errorObject.code}`)
-})
-
-let createTrains = (snap) => {
-  let first = snap.val().firstArrival
-  let freq = snap.val().frequency
-  let id = snap.key
-  // Returns converted time values
-  let times = getTrainTime(first, freq)
-  let minutesAway = times[0]
-  let nextArrival = times[1]
-  // Add train to train schedule table
-  let newRow = $('<tr>')
-  newRow.attr('data-id', id)
-  newRow.append(`<td>${snap.val().trainName}</td>`)
-  newRow.append(`<td>${snap.val().destination}</td>`)
-  newRow.append(`<td>${snap.val().frequency}</td>`)
-  newRow.append(`<td>${nextArrival}</td>`)
-  newRow.append(`<td>${minutesAway}</td>`)
-  newRow.append(`<td>
-                  <span data-toggle="tooltip" data-placement="top" title="Edit">
-                    <button class="edit" data-id="${id}"
-                    data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                  </span>
-                </td>`)
-  $('#train-table').append(newRow)
-  // Get tooltips
-  $('[data-toggle="tooltip"]').tooltip()
+const trainTable = $('#train-table')
+let createTrains = (data) => {
+  if (data.length) {
+    let html = ''
+    data.forEach(doc => {
+      const train = doc.data()
+      let id = doc.key
+      trainNames.push(train.trainName.toLowerCase())
+      // Returns converted time values
+      let times = getTrainTime(train.firstArrival, train.frequency)
+      let minutesAway = times[0]
+      let nextArrival = times[1]
+      const tr = `
+        <tr>
+          <td>${train.trainName}</td>
+          <td>${train.destination}</td>
+          <td>${train.frequency}</td>
+          <td>${nextArrival}</td>
+          <td>${minutesAway}</td>
+          <td>
+            <span data-toggle="tooltip" data-placement="top" title="Edit">
+              <button class="edit" data-id="${id}"
+              data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
+                <i class="fas fa-edit"></i>
+              </button>
+            </span>
+          </td>
+        </tr>
+      `
+      html += tr
+    })
+    $('#train-table').html(html)
+    // Get tooltips
+    $('[data-toggle="tooltip"]').tooltip()
+  } else {
+    $('#train-table').html('<h5 class="text-center mt-4"><i class="fas fa-exclamation-triangle"></i> Login to view trains</h5>')
+  }
 }
 
 $(document).on('click', '.edit', function () {
@@ -109,36 +124,20 @@ $(document).on('click', '.edit', function () {
   })
 })
 
-// Listens for edits and displays them to every instance of the page that's open
-db.ref().on('child_changed', function (snapshot) {
-  let editID = snapshot.key
+// // Listens for edits and displays them to every instance of the page that's open
+// db.collection('trains').on('child_changed', function (snapshot) {
+//   let editID = snapshot.key
 
-  $('#train-table > tr').each(function () {
-    let trID = $(this).data('id')
-    if (trID === editID) {
-      console.log(snapshot.val().trainName)
-      $(this).children('td').eq(0).text(snapshot.val().trainName)
-      $(this).children('td').eq(1).text(snapshot.val().destination)
-      $(this).children('td').eq(2).text(snapshot.val().frequency)
-    }
-  })
-})
-
-// Calculate next time the train will arrive and how many minutes away
-const getTrainTime = (first, freq) => {
-  // First Time (pushed back 1 year to make sure it comes before current time)
-  let firstTimeConverted = moment(first, 'HH:mm').subtract(1, 'years')
-  // Difference between the times
-  let diffTime = moment().diff(moment(firstTimeConverted), 'minutes')
-  // Time apart (remainder)
-  let remainder = diffTime % freq
-  // Minute(s) Until Train
-  let minsUntil = freq - remainder
-  // Next Train
-  let nextTrain = moment().add(minsUntil, 'minutes')
-  let nextTrainConverted = moment(nextTrain).format('hh:mm A')
-  return [minsUntil, nextTrainConverted]
-}
+//   $('#train-table > tr').each(function () {
+//     let trID = $(this).data('id')
+//     if (trID === editID) {
+//       console.log(snapshot.val().trainName)
+//       $(this).children('td').eq(0).text(snapshot.val().trainName)
+//       $(this).children('td').eq(1).text(snapshot.val().destination)
+//       $(this).children('td').eq(2).text(snapshot.val().frequency)
+//     }
+//   })
+// })
 
 // Only allows train to be added if it meets necessary requirements
 let checkValidity = (name, dest, first, freq, isUpdate) => {
@@ -248,7 +247,6 @@ $(document).on('click', '#audio-toggle', function () {
 
 // Animate submit train
 let inputFormAnimate = () => {
-  console.log('registerd')
   $('.send-animate').addClass('is-sent')
   setTimeout(function () {
     $('.send-animate').removeClass('is-sent')
@@ -266,3 +264,6 @@ midnightTrain.addEventListener('ended', function () {
 
 // Add some placeholder to the first arrival inpu0t
 document.getElementById('train-first-arrival').value = moment().format('HH:mm')
+
+// get tooltips
+$('[data-toggle="tooltip"]').tooltip()

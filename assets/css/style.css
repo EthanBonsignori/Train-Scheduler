@@ -195,6 +195,10 @@ body {
     margin-top: 1.5rem;
     margin-left: 1rem;
   }
+  #train-table .fa-exclamation-triangle {
+    color: orange;
+    font-size: 2rem;
+  }
 
 /* New Train Input */
 #train-form input[type=text] {

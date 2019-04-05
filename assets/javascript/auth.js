@@ -1,17 +1,45 @@
+// Listen for auth status changes
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log('User logged in', user)
+    db.collection('trains').get()
+      .then(snapshot => {
+        createTrains(snapshot.docs)
+      })
+  } else {
+    console.log('User logged out')
+    // Run function without data if user is not logged in
+    createTrains([])
+  }
+})
+
 // New user signup
 const signupForm = $('#signup-form')
 signupForm.on('submit', (e) => {
   e.preventDefault()
 
   // Get Signup Form Inputs
-  const displayName = signupForm['signup-displayname'].val()
-  const email = signupForm['signup-email'].val()
-  const password = signupForm['singup-password'].val()
+  const displayName = $('#signup-displayname').val()
+  const email = $('#signup-email').val()
+  const password = $('#signup-password').val()
 
   // Signup the user
+  let passwordGood = true
   auth.createUserWithEmailAndPassword(email, password)
-    .then(cred => {
-      console.log(cred)
+    .catch(function (error) {
+      passwordGood = false
+      $('#password-response').html(error.message).css('color', 'red')
+    }).then(function (cred) {
+      if (passwordGood) {
+        // Close the signup modal and clear the signup forms
+        console.log(cred.user)
+        $('#modal-signup').modal('toggle')
+        document.getElementById('signup-form').reset()
+        let user = auth.currentUser
+        user.updateProfile({
+          displayName: displayName
+        })
+      }
     })
 })
 
@@ -41,4 +69,31 @@ $('#signup-password, #signup-password-confirm').on('keyup', function () {
     $('#no-match').css('display', 'block')
     $('#match').css('display', 'none')
   }
+})
+
+// User Login
+const loginForm = $('#login-form')
+loginForm.on('submit', (e) => {
+  e.preventDefault()
+
+  // Get user info
+  const email = $('#login-email').val()
+  const password = $('#login-password').val()
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      // Close the login modal and clear the login forms
+      $('#modal-login').modal('toggle')
+      document.getElementById('login-form').reset()
+    }).catch(function (error) {
+      $('#password-login-response').html(error.message).css('color', 'red')
+    })
+})
+
+// User logout
+const logout = $('#logout')
+logout.on('click', (e) => {
+  e.preventDefault()
+  // Sign the user out
+  auth.signOut()
 })

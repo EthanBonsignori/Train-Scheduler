@@ -49,6 +49,9 @@
               <button class="btn btn-info" id="create-account" data-toggle="modal" data-target="#modal-signup">
                 Create Account
               </button>
+            </div><!-- End Logged Out Display -->
+            <div class="logged-in">
+              <button class="btn btn-danger" id="logout">Logout</button>
             </div>
           </div>
         </div> <!-- End Account Collapse -->
@@ -223,6 +226,7 @@
                     <i id="no-match" class="fas fa-times"></i>
                   </div>
                 </div>
+                <button class="btn btn-success">Sign Up</button>
               </form>
             </div>
           </div>
@@ -240,18 +244,20 @@
               </button>
             </div>
             <div class="modal-body">
-              <form id="signin-form">
+              <form id="login-form">
                 <div class="form-group">
-                  <label for="signin-email">Email</label>
-                  <input type="email" class="form-control" id="signin-email" placeholder="Your email" required>
+                  <label for="login-email">Email</label>
+                  <input type="email" class="form-control" id="login-email" required>
                 </div>
                 <div class="form-group position-relative">
-                  <label for="signin-password">Password</label>
-                  <input type="password" class="form-control password" id="signin-password" placeholder="Your password" required>
+                  <label for="login-password">Password</label>
+                  <input type="password" class="form-control password" id="login-password" required>
+                  <small id="password-login-response" class="form-text"></small>
                   <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
                     <i class="fas fa-eye"></i>
                   </div>
                 </div>
+                <button class="btn btn-success">Log In</button>
               </form>
             </div>
           </div>
@@ -270,20 +276,20 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-firestore.js"></script>
     <script>
     // Initialize Firebase
     var config = {
-      apiKey: 'AIzaSyC9BcuqTuIWCyiocc7J-Uichf_emz1aZy4',
-      authDomain: 'bootcamp-2019.firebaseapp.com',
-      databaseURL: 'https://bootcamp-2019.firebaseio.com',
-      projectId: 'bootcamp-2019'
+      apiKey: "AIzaSyAQ4UFzcIzYE_sVLenZ6WVuyGFUjvWSCIg",
+      authDomain: "midnight-train-db.firebaseapp.com",
+      databaseURL: "https://midnight-train-db.firebaseio.com",
+      projectId: "midnight-train-db",
     }
     firebase.initializeApp(config)
 
     // create auth and firebase database references
     const auth = firebase.auth()
-    const db = firebase.database()
+    const db = firebase.firestore()
     </script>
 
     <!-- Bootstrap JavaScript -->
@@ -300,8 +306,9 @@
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <!-- My JavaScript -->
-    <script src = "assets/javascript/auth.js"></script>
     <script src="assets/javascript/app.js"></script>
+    <script src = "assets/javascript/auth.js"></script>
+    
 
   </body>
 </html>
