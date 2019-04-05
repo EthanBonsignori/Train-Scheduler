@@ -78,6 +78,38 @@ body {
     text-shadow: 1px 1px 6px;
   }
 
+/* Account Buttons */ 
+.card-body #login, .card-body #create-account {
+  margin-right: 1.5rem;
+  margin-left: 5rem;
+}
+.password-toggle {
+  position: absolute;
+  width: auto;
+  bottom: 8px;
+  right: 10px;
+  margin-top: 0;
+  cursor: pointer;
+  pointer-events: all;
+  color: #B6BABE;
+}
+
+#password-match {
+  position: absolute;
+  width: auto;
+  bottom: 33px;
+  right: 10px;
+  margin-top: 0;
+}
+  #password-match #no-match {
+    color: red;
+    display: none;
+  }
+  #password-match #match {
+    color: green;
+    display: none;
+  }
+
 /* Cards */
 .card {
   position: relative;
@@ -165,7 +197,7 @@ body {
   }
 
 /* New Train Input */
-input[type=text] {
+#train-form input[type=text] {
   -webkit-appearance: none;
 
   width: 100%;

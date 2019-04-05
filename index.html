@@ -43,7 +43,10 @@
         <div id="account-collapse" class="collapse show">
           <div class="card-body">
             <div class="logged-out text-center">
-              <button class="btn btn-primary" id="create-account" data-toggle="modal" data-target="modal-signup">
+              <button class="btn btn-success" id="login" data-toggle="modal" data-target="#modal-login">
+                Login
+              </button>
+              <button class="btn btn-info" id="create-account" data-toggle="modal" data-target="#modal-signup">
                 Create Account
               </button>
             </div>
@@ -193,6 +196,63 @@
               </button>
             </div>
             <div class="modal-body">
+              <form id="signup-form">
+                <div class="form-group">
+                  <label for="signup-displayname">Display Name</label>
+                  <input type="text" class="form-control" id="signup-displayname" required>
+                  <small class="form-text text-muted">This is the name other users will see.</small>
+                </div>
+                <div class="form-group">
+                  <label for="signup-email">Email</label>
+                  <input type="email" class="form-control" id="signup-email" required>
+                  <small class="form-text text-muted">Your email will not be visible to other users.</small>
+                </div>
+                <div class="form-group position-relative">
+                  <label for="signup-password">Password</label>
+                  <input type="password" class="form-control password" id="signup-password" required>
+                  <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
+                    <i class="fas fa-eye"></i>
+                  </div>
+                </div>
+                <div class="form-group position-relative">
+                  <label for="signup-password-confirm">Confirm Password</label>
+                  <input type="password" class="form-control" id="signup-password-confirm" required>
+                  <small id="password-response" class="form-text"></small>
+                  <div id="password-match">
+                    <i id="match" class="fas fa-check"></i>
+                    <i id="no-match" class="fas fa-times"></i>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login Modal -->
+      <div class="modal fade" id="modal-login" tabindex="10" role="dialog" aria-labelledby="login-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Log In</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="signin-form">
+                <div class="form-group">
+                  <label for="signin-email">Email</label>
+                  <input type="email" class="form-control" id="signin-email" placeholder="Your email" required>
+                </div>
+                <div class="form-group position-relative">
+                  <label for="signin-password">Password</label>
+                  <input type="password" class="form-control password" id="signin-password" placeholder="Your password" required>
+                  <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
+                    <i class="fas fa-eye"></i>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
