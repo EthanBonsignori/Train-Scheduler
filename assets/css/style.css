@@ -81,7 +81,7 @@ body {
 /* Cards */
 .card {
   position: relative;
-  z-index: 100;
+  z-index: 1000;
   background-color: rgba(245, 245, 245, 0.5); 
   color: #000;
   margin-top: 2rem;
@@ -90,6 +90,7 @@ body {
   .card-header {
     position: relative;
     font-weight: bold;
+    color: #FCBBB5;
     background-color: #758295;
     text-align: center;
   }
@@ -132,11 +133,16 @@ body {
 #edit-modal-dialog {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
 }
   #edit-modal {
     position: absolute;
     top: 0;
-    right: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  #edit-modal .modal-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 0.2rem #F8878B;
   }
   #edit-modal input {
     color: #000;

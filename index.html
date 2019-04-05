@@ -30,12 +30,33 @@
         </h1>
       </div>
 
+      <!-- Account info -->
+      <div id="account-card" class="card">
+        <h5 class="card-header">
+          <i class="fas fa-user"></i>
+            Account
+          <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#account-collapse" aria-expanded="false" aria-controls="collapse-account">
+            <i class="fa fa-chevron-down"></i>
+          </button>
+        </h5>
+        </button>
+        <div id="account-collapse" class="collapse show">
+          <div class="card-body">
+            <div class="logged-out text-center">
+              <button class="btn btn-primary" id="create-account" data-toggle="modal" data-target="modal-signup">
+                Create Account
+              </button>
+            </div>
+          </div>
+        </div> <!-- End Account Collapse -->
+      </div> <!-- End Account Card -->
+
       <!-- Train Schedule -->
       <div id="schedule-card" class="card">
-          <h5 class="card-header" style="color:#FDADAB">
+          <h5 class="card-header">
             <i class="fas fa-calendar-alt"></i> 
              Train Schedule
-            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#table-collapse" aria-expanded="true" aria-controls="collapseTable">
+            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#table-collapse" aria-expanded="false" aria-controls="collapse-train-info">
               <i class="fa fa-chevron-down"></i>
             </button>
           </h5>
@@ -87,99 +108,139 @@
                     </div>
                   </div>
                 </div>
-              </div>     
+              </div> <!-- End Edit Modal-->  
             </table>
           </div> <!-- End Card Body -->
         </div> <!-- End Table Collapse -->
       </div> <!-- End Schedule Card-->
 
         <!-- New Train Input -->
-        <div class="send-animate">
-          <div id="input-card" class="card">
-            <h5 class="card-header" style="color:#FCBBB5">
-              <i class="fas fa-train"></i>  
-              Add Train
-              <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#input-collapse" aria-expanded="true" aria-controls="collapseTable">
-                <i class="fa fa-chevron-down"></i>
-              </button>
-            </h5>
-            <div id="input-collapse" class="collapse">
-              <div class="card-body">
-                <!-- Train Form -->
-                <form id="train-form">
-                  <div class="form-group">
-                    <label for="train-name">Train Name</label>
-                    <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
-                    <span id="name-error" class="error" aria-live="polite"></span>
-                  </div>
-                  <div class="form-group">
-                    <label for="train-destination">Destination</label>
-                    <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
-                    <span id="dest-error" class="error" aria-live="polite"></span>
-                  </div>
-                  <div class="form-group">
-                    <label for="train-first-arrival">First Arrival Time</label>
-                    <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
-                    <span id="time-error" class="error" aria-live="polite"></span>
-                  </div>
-                  <div class="form-group">
-                    <label for="train-frequency">Frequency (min)</label>
-                    <input type="number" class="form-control" id="train-frequency" value="10" min="1" max="60" required>
-                    <span id="freq-error" class="error" aria-live="polite"></span>
-                  </div>
-                  <button type="submit" id="submit" class="btn btn-primary">Submit</button>
-                </form>
-              </div>
-              <img id="train-left-middle" src="assets/images/train-left-middle.png">
-            </div> <!-- End Input Collapse -->
-          </div><!-- End Input Card-->
-        </div>
+        <div id="input-card" class="card send-animate">
+          <h5 class="card-header">
+            <i class="fas fa-train"></i>  
+            Add Train
+            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#input-collapse" aria-expanded="false" aria-controls="collapse-add-train">
+              <i class="fa fa-chevron-down"></i>
+            </button>
+          </h5>
+          <div id="input-collapse" class="collapse">
+            <div class="card-body">
+              <!-- Train Form -->
+              <form id="train-form">
+                <div class="form-group">
+                  <label for="train-name">Train Name</label>
+                  <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
+                  <span id="name-error" class="error" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="train-destination">Destination</label>
+                  <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
+                  <span id="dest-error" class="error" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="train-first-arrival">First Arrival Time</label>
+                  <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
+                  <span id="time-error" class="error" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="train-frequency">Frequency (min)</label>
+                  <input type="number" class="form-control" id="train-frequency" value="10" min="1" max="60" required>
+                  <span id="freq-error" class="error" aria-live="polite"></span>
+                </div>
+                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div> <!-- End Input Collapse -->
+        </div><!-- End Input Card-->
 
         <!-- Choo Choo -->
         <img id="train-right-top"   src="assets/images/train-right-top.png">
+        <img id="train-left-middle" src="assets/images/train-left-middle.png">
         <img id="train-left-bottom" src="assets/images/train-left-bottom.png">
-        <!-- Music -->
-        <iframe src="assets/music/silence.mp3" allow="autoplay" style="display:none"></iframe>
-        <audio id="audio" autoplay loop>
-          <source src="assets/music/trainbeats.mp3" type="audio/mp3">
-        </audio>
-        <audio id="midnight-train">
-          <source src="assets/music/midnight-train.mp3 " type="audio/mp3">
-        </audio>
-        
-        <!-- Information Modal -->
-        <div class="modal fade" id="info-modal" tabindex="10" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">About</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-              <p>This Train Scheduler App was made as an exercise in saving and retrieving data from a server (Firebase)</p>
-              <p>All of this apps animations were created with css only.</p>
-              <p>Check out the <a href="https://github.com/EthanBonsignori/Train-Scheduler" target="_blank">github repository</a> for this project.</p>
-              <h6>-Ethan Bonsignori (4/2019)</h6>
-              </div>
-            </div>
-          </div>
-        </div>                                                               
 
       </div> <!-- End Container -->
     </div> <!-- End Wrapper -->
+        
+    <!-- MODALS -->
+      <!-- Information Modal -->
+      <div class="modal fade" id="info-modal" tabindex="10" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">About</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+            <p>This Train Scheduler App was made as an exercise in saving and retrieving data from a server (Firebase)</p>
+            <p>All of this apps animations were created with css only.</p>
+            <p>Check out the <a href="https://github.com/EthanBonsignori/Train-Scheduler" target="_blank">github repository</a> for this project.</p>
+            <h6>-Ethan Bonsignori (4/2019)</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signup Modal -->
+      <div class="modal fade" id="modal-signup" tabindex="10" role="dialog" aria-labelledby="signup-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Sign Up</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Music -->
+      <iframe src="assets/music/silence.mp3" allow="autoplay" style="display:none"></iframe>
+      <audio id="audio" autoplay loop>
+        <source src="assets/music/trainbeats.mp3" type="audio/mp3">
+      </audio>
+      <audio id="midnight-train">
+        <source src="assets/music/midnight-train.mp3 " type="audio/mp3">
+      </audio>
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: 'AIzaSyC9BcuqTuIWCyiocc7J-Uichf_emz1aZy4',
+      authDomain: 'bootcamp-2019.firebaseapp.com',
+      databaseURL: 'https://bootcamp-2019.firebaseio.com',
+      projectId: 'bootcamp-2019'
+    }
+    firebase.initializeApp(config)
+
+    // create auth and firebase database references
+    const auth = firebase.auth()
+    const db = firebase.database()
+    </script>
+
     <!-- Bootstrap JavaScript -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> 
+    <!-- Init Modals -->
+    <script>
+      $('#edit-modal').on('shown.bs.modal', function () {
+        $('#new-train-name').trigger('focus')
+      })
+    </script>
+    
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <!-- My JavaScript -->
+    <script src = "assets/javascript/auth.js"></script>
     <script src="assets/javascript/app.js"></script>
 
   </body>

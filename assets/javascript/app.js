@@ -3,20 +3,6 @@ const trainAudio = document.getElementById('audio')
 const midnightTrain = document.getElementById('midnight-train')
 let isUpdate = false
 
-// Initialize Firebase
-var config = {
-  apiKey: 'AIzaSyC9BcuqTuIWCyiocc7J-Uichf_emz1aZy4',
-  authDomain: 'bootcamp-2019.firebaseapp.com',
-  databaseURL: 'https://bootcamp-2019.firebaseio.com',
-  projectId: 'bootcamp-2019',
-  storageBucket: 'bootcamp-2019.appspot.com',
-  messagingSenderId: '637420148992'
-}
-
-firebase.initializeApp(config)
-let db = firebase.database()
-console.log(db.ref('bootcamp-2019/'))
-
 $(document).on('click', '#submit', function (event) {
   event.preventDefault()
 
@@ -73,12 +59,17 @@ let createTrains = (snap) => {
   newRow.append(`<td>${snap.val().frequency}</td>`)
   newRow.append(`<td>${nextArrival}</td>`)
   newRow.append(`<td>${minutesAway}</td>`)
-  newRow.append(`<td> 
-                  <button class="edit" data-id="${id}" data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
-                    <i class="fas fa-edit"></i>
-                  </button>
+  newRow.append(`<td>
+                  <span data-toggle="tooltip" data-placement="top" title="Edit">
+                    <button class="edit" data-id="${id}"
+                    data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </span>
                 </td>`)
   $('#train-table').append(newRow)
+  // Get tooltips
+  $('[data-toggle="tooltip"]').tooltip()
 }
 
 $(document).on('click', '.edit', function () {
@@ -191,7 +182,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Play midnight train if destination includes ga or georgia
   // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
-  if ( lcDest.includes(' ga') || lcDest.includes('georgia') ) {
+  if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
     $('#subtitle').text('to Georgia')
     trainAudio.pause()
     midnightTrain.volume = 1
