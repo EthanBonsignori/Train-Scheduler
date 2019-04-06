@@ -274,7 +274,7 @@ let inputFormAnimate = () => {
 // Initialize audio
 // Set audio volume very low (background noise)
 trainAudio.volume = 0.08
-// Play the train noise when Midnight train ends
+// Play the train noise when/if Midnight train ends
 midnightTrain.addEventListener('ended', function () {
   $('#subtitle').text('to wherever').removeClass('animated')
   $('#moon').removeClass('animated')
@@ -283,8 +283,8 @@ midnightTrain.addEventListener('ended', function () {
   trainAudio.play()
 })
 
-// Add some placeholder to the first arrival inpu0t
+// Add some placeholder to the first arrival input
 document.getElementById('train-first-arrival').value = moment().format('HH:mm')
 
-// get tooltips
+// Grab Tooltips
 $('[data-toggle="tooltip"]').tooltip()

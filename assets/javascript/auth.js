@@ -27,7 +27,7 @@ const setupUI = (user) => {
   }
 }
 
-// Store user displayname of logged in user globally
+// Store display name of logged in user globally
 let userDisplayName
 // Listen for auth status changes
 auth.onAuthStateChanged(user => {
@@ -57,6 +57,7 @@ signupForm.on('submit', (e) => {
   const displayName = $('#signup-displayname').val()
   const email = $('#signup-email').val()
   const password = $('#signup-password').val()
+  userDisplayName = displayName
 
   // Signup the user
   auth.createUserWithEmailAndPassword(email, password)
@@ -124,7 +125,6 @@ loginForm.on('submit', (e) => {
 const logout = $('#logout')
 logout.on('click', (e) => {
   e.preventDefault()
-  console.log('click logout')
   // Sign the user out
   auth.signOut()
 })
