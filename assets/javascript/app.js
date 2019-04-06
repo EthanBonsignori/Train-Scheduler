@@ -55,8 +55,6 @@ trainForm.on('submit', (e) => {
 
 // Holds train names so they cannot be re-used
 let trainNames = []
-// Create trains from firestore data
-const trainTable = $('#train-table')
 let createTrains = (data) => {
   if (data.length) {
     let html = ''
@@ -179,7 +177,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Play midnight train if destination includes ga or georgia
   // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
-  if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
+  if (lcDest.includes('ga') || lcDest.includes('georgia')) {
     $('#subtitle').text('to Georgia').addClass('animated')
     $('#moon').addClass('animated')
     $('#title-icon').addClass('animated')
@@ -250,7 +248,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
 $(document).on('click', '.error', function () {
   $(this).text('')
   $(this).removeClass('active')
-}) 
+})
 
 // Mute / Unmute the audio on click
 $(document).on('click', '#audio-toggle', function () {

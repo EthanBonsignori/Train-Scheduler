@@ -66,7 +66,7 @@ signupForm.on('submit', (e) => {
       document.getElementById('signup-form').reset()
       let user = auth.currentUser
       user.updateProfile({
-        displayName: displayName,
+        displayName: displayName
       })
     }).catch(function (error) {
       $('#password-response').html(error.message).css('color', 'red')
