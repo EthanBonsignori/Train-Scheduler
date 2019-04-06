@@ -1,29 +1,48 @@
 // Hide and show html elements based on whether user is logged in or out
 const userLoggedOut = document.querySelectorAll('.logged-out')
 const userLoggedIn = document.querySelectorAll('.logged-in')
+const accountDetails = $('#account-details')
 
 const setupUI = (user) => {
+  // if logged in
   if (user) {
-    userLoggedIn.forEach(item => item.style.display = 'block')
-    userLoggedOut.forEach(item => item.style.display = 'none')
+    accountDetails.empty()
+    // Show account info
+    const html = `
+      <h6 id="display-name">Display Name: ${user.displayName}</h6>
+      <h6>Email: ${user.email}</h6>
+      <h6>Account created: ${user.metadata.creationTime}</h6>
+    `
+    accountDetails.prepend(html)
+    // Show UI elements
+    userLoggedIn.forEach((item) => { item.style.display = 'block' })
+    userLoggedOut.forEach((item) => { item.style.display = 'none' })
+  // if logged out
   } else {
-    userLoggedIn.forEach(item => item.style.display = 'none')
-    userLoggedOut.forEach(item => item.style.display = 'block')
+    // Hide account details
+    accountDetails.empty()
+    // Hide UI elements
+    userLoggedIn.forEach((item) => { item.style.display = 'none' })
+    userLoggedOut.forEach((item) => { item.style.display = 'block' })
   }
 }
 
+// Store user displayname of logged in user globally
+let userDisplayName
 // Listen for auth status changes
 auth.onAuthStateChanged(user => {
   if (user) {
     console.log('User logged in', user)
+    // Save the display name of the logged in user
+    userDisplayName = user.displayName
     // Grab train info on any change in the database
     db.collection('trains').onSnapshot(snapshot => {
       createTrains(snapshot.docs)
       setupUI(user)
-    })
+    }, error => console.log(error.message))
   } else {
     console.log('User logged out')
-    // Run function without data if user is not logged in
+    // Run functions without data if user is not logged in so they won't display anything
     setupUI()
     createTrains([])
   }
@@ -40,22 +59,17 @@ signupForm.on('submit', (e) => {
   const password = $('#signup-password').val()
 
   // Signup the user
-  let passwordGood = true
   auth.createUserWithEmailAndPassword(email, password)
-    .catch(function (error) {
-      passwordGood = false
+    .then(function (cred) {
+      // Close the signup modal and clear the signup forms
+      $('#modal-signup').modal('toggle')
+      document.getElementById('signup-form').reset()
+      let user = auth.currentUser
+      user.updateProfile({
+        displayName: displayName,
+      })
+    }).catch(function (error) {
       $('#password-response').html(error.message).css('color', 'red')
-    }).then(function (cred) {
-      if (passwordGood) {
-        // Close the signup modal and clear the signup forms
-        console.log(cred.user)
-        $('#modal-signup').modal('toggle')
-        document.getElementById('signup-form').reset()
-        let user = auth.currentUser
-        user.updateProfile({
-          displayName: displayName
-        })
-      }
     })
 })
 
@@ -110,6 +124,7 @@ loginForm.on('submit', (e) => {
 const logout = $('#logout')
 logout.on('click', (e) => {
   e.preventDefault()
+  console.log('click logout')
   // Sign the user out
   auth.signOut()
 })

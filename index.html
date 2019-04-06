@@ -21,11 +21,11 @@
 
       <div id="jumbo" class="jumbotron jumbotron-fluid animated fadeIn slow">
         <h1 id="title" class="display-2 text-center">Midnight Train
-          <span id="moon"><i class="far fa-moon"></i></span>
-          <span id="subtitle">to wherever</span>
-          <i id="audio-toggle" class="fas fa-volume-up fa-volume-mute play"></i>
-          <button type="button" id="title-icon" data-toggle="modal" data-target="#info-modal">
-              <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Info"></i>
+          <span id="moon" class="infinite pulse"><i class="far fa-moon"></i></span>
+          <span id="subtitle" class="infinite pulse">to wherever</span>
+          <i id="audio-toggle" class="fas fa-volume-up fa-volume-mute play infinite pulse" data-toggle="tooltip" data-placement="right" title="Mute/Unmute Audio"></i>
+          <button type="button" class="infinite pulse" id="title-icon" data-toggle="modal" data-target="#info-modal">
+              <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" title="Info"></i>
           </button>
         </h1>
       </div>
@@ -46,11 +46,13 @@
               <button class="btn btn-success" id="login" data-toggle="modal" data-target="#modal-login">
                 Login
               </button>
-              <button class="btn btn-info" id="create-account" data-toggle="modal" data-target="#modal-signup">
+              <button class="btn btn-primary" id="create-account" data-toggle="modal" data-target="#modal-signup">
                 Create Account
               </button>
             </div><!-- End Logged Out Display -->
-            <div class="logged-in text-center">
+            <div id="account-details" class="logged-in text-center"></div>
+              <!-- Account details added here on log in -->
+            <div class="text-center logged-in">
               <button class="btn btn-danger" id="logout">Logout</button>
             </div>
           </div>
@@ -59,66 +61,71 @@
 
       <!-- Train Schedule -->
       <div id="schedule-card" class="card">
-          <h5 class="card-header">
-            <i class="fas fa-calendar-alt"></i> 
-             Train Schedule
-            <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#table-collapse" aria-expanded="false" aria-controls="collapse-train-info">
-              <i class="fa fa-chevron-down"></i>
-            </button>
-          </h5>
-        </button>
+        <h5 class="card-header">
+          <i class="fas fa-calendar-alt"></i> 
+            Train Schedule
+          <button class="collapsed btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#table-collapse" aria-expanded="false" aria-controls="collapse-train-info">
+            <i class="fa fa-chevron-down"></i>
+          </button>
+        </h5>
         <div id="table-collapse" class="collapse">
           <div class="card-body">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Train Name</th>
-                  <th scope="col">Destination</th>
-                  <th scope="col">Frequency (min)</th>
-                  <th scope="col">Next Arrival</th>
-                  <th scope="col">Minutes Away</th>
-                </tr>
-              </thead>
-              <tbody id="train-table"><!-- New Trains Append Here--></tbody>
-              <!-- Edit Modal -->
-              <div class="modal" id="edit-modal" tabindex="10" role="edit" aria-labelledby="edit-modal" aria-hidden="true">
-                <div class="modal-dialog" id="edit-modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-body">
-                      <form id="edit-form">
-                        <div class="row">
-                          <div class="col">
-                            <!-- Edit Train Name -->
-                            <label for="new-train-name">Train Name</label>
-                            <input type="text" class="form-control" id="new-train-name" minlength="3" maxlength ="20" required>
-                            <span id="name-error-update" class="error" aria-live="polite"></span>
+            <h5 class="logged-out text-center"><i class="fas fa-exclamation-triangle"></i> Log in to view the train schedule</h5>
+            <div class="logged-in">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Train Name</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Frequency (min)</th>
+                    <th scope="col">Next Arrival</th>
+                    <th scope="col">Minutes Away</th>
+                    <th scope="col">Added By</th>
+                  </tr>
+                </thead>
+                <tbody id="train-table">
+                  <!-- New Trains Append Here-->
+                </tbody>
+                <!-- Edit Modal -->
+                <div class="modal" id="edit-modal" tabindex="10" role="edit" aria-labelledby="edit-modal" aria-hidden="true">
+                  <div class="modal-dialog" id="edit-modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <form id="edit-form">
+                          <div class="row">
+                            <div class="col">
+                              <!-- Edit Train Name -->
+                              <label for="new-train-name">Train Name</label>
+                              <input type="text" class="form-control" id="new-train-name" minlength="3" maxlength ="20" required>
+                              <span id="name-error-update" class="error" aria-live="polite"></span>
+                            </div>
+                            <div class="col">
+                              <!-- Edit Desination -->
+                              <label for="new-train-destination">Destination</label>
+                              <input type="text" class="form-control" id="new-train-dest" minlength="3" maxlength ="20" required>
+                              <span id="dest-error-update" class="error" aria-live="polite"></span>
+                            </div>
+                            <div class="col">
+                              <!-- Edit Frequency -->
+                              <label for="new-train-frequency">Frequency (min)</label>
+                              <input type="number" class="form-control" id="new-train-freq" min="1" max="60" required>
+                              <span id="freq-error-update" class="error" aria-live="polite"></span>
+                            </div>
+                            <div class="col" id="save-button-container">
+                              <button type="submit" class="btn btn-success" id="save-button">Save</button>
+                              <button type="submit" class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
+                            </div>
                           </div>
-                          <div class="col">
-                            <!-- Edit Desination -->
-                            <label for="new-train-destination">Destination</label>
-                            <input type="text" class="form-control" id="new-train-dest" minlength="3" maxlength ="20" required>
-                            <span id="dest-error-update" class="error" aria-live="polite"></span>
-                          </div>
-                          <div class="col">
-                            <!-- Edit Frequency -->
-                            <label for="new-train-frequency">Frequency (min)</label>
-                            <input type="number" class="form-control" id="new-train-freq" min="1" max="60" required>
-                            <span id="freq-error-update" class="error" aria-live="polite"></span>
-                          </div>
-                          <div class="col" id="save-button-container">
-                            <button type="submit" class="btn btn-success" id="save-button">Save</button>
-                            <button type="submit" class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
-                          </div>
-                        </div>
-                      </form>
+                        </form>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div> <!-- End Edit Modal-->  
-            </table>
+                </div> <!-- End Edit Modal-->  
+              </table>
+            </div>
           </div> <!-- End Card Body -->
         </div> <!-- End Table Collapse -->
-      </div> <!-- End Schedule Card-->
+      </div> <!-- End Table Card-->
 
         <!-- New Train Input -->
         <div class="logged-in">
@@ -136,22 +143,22 @@
                 <form id="train-form">
                   <div class="form-group">
                     <label for="train-name">Train Name</label>
-                    <input type="text" class="form-control" id="train-name" minlength="3" maxlength ="20" required>
+                    <input type="text" class="form-control" id="train-name">
                     <span id="name-error" class="error" aria-live="polite"></span>
                   </div>
                   <div class="form-group">
                     <label for="train-destination">Destination</label>
-                    <input type="text" class="form-control" id="train-destination" minlength="3" maxlength ="20" required>
+                    <input type="text" class="form-control" id="train-destination">
                     <span id="dest-error" class="error" aria-live="polite"></span>
                   </div>
                   <div class="form-group">
                     <label for="train-first-arrival">First Arrival Time</label>
-                    <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)" required>
+                    <input type="time" class="form-control" id="train-first-arrival" placeholder="Time (HH:mm - military time)">
                     <span id="time-error" class="error" aria-live="polite"></span>
                   </div>
                   <div class="form-group">
                     <label for="train-frequency">Frequency (min)</label>
-                    <input type="number" class="form-control" id="train-frequency" value="10" min="1" max="60" required>
+                    <input type="number" class="form-control" id="train-frequency">
                     <span id="freq-error" class="error" aria-live="polite"></span>
                   </div>
                   <button type="submit" id="submit" class="btn btn-primary">Submit</button>
@@ -161,119 +168,120 @@
           </div><!-- End Input Card-->
         </div>
 
-        <!-- Choo Choo -->
-        <img id="train-right-top"   src="assets/images/train-right-top.png">
-        <img id="train-left-middle" src="assets/images/train-left-middle.png">
-        <img id="train-left-bottom" src="assets/images/train-left-bottom.png">
-
       </div> <!-- End Container -->
     </div> <!-- End Wrapper -->
-        
-    <!-- MODALS -->
-      <!-- Information Modal -->
-      <div class="modal fade" id="info-modal" tabindex="10" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">About</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-            <p>This Train Scheduler App was made as an exercise in saving and retrieving data from a server (Firebase)</p>
-            <p>All of this apps animations were created with css only.</p>
-            <p>Check out the <a href="https://github.com/EthanBonsignori/Train-Scheduler" target="_blank">github repository</a> for this project.</p>
-            <h6>-Ethan Bonsignori (4/2019)</h6>
-            </div>
+
+    <!-- Choo Choo -->
+    <img id="train-right-top"   src="assets/images/train-right-top.png">
+    <img id="train-left-middle" src="assets/images/train-left-middle.png">
+    <img id="train-left-bottom" src="assets/images/train-left-bottom.png">
+
+  <!-- MODALS -->
+    <!-- Information Modal -->
+    <div class="modal fade" id="info-modal" tabindex="10" role="dialog" aria-labelledby="info-modal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">About</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          <p>This Train Scheduler App was made as an exercise in saving and retrieving data from a server (Firebase Firestore)</p>
+          <p>All of this apps animations were created with css only.</p>
+          <p>Check out the <a href="https://github.com/EthanBonsignori/Train-Scheduler" target="_blank">github repository</a> for this project.</p>
+          <h6>-Ethan Bonsignori (4/2019)</h6>
+          <small class="text-muted">PS: Try sending a train to somewhere in GA for some fun.</small>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Signup Modal -->
-      <div class="modal fade" id="modal-signup" tabindex="10" role="dialog" aria-labelledby="signup-modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Sign Up</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="signup-form">
-                <div class="form-group">
-                  <label for="signup-displayname">Display Name</label>
-                  <input type="text" class="form-control" id="signup-displayname" required>
-                  <small class="form-text text-muted">This is the name other users will see.</small>
+    <!-- Signup Modal -->
+    <div class="modal fade" id="modal-signup" tabindex="10" role="dialog" aria-labelledby="signup-modal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create Account</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="signup-form">
+              <div class="form-group">
+                <label for="signup-displayname">Display Name</label>
+                <input type="text" class="form-control" id="signup-displayname" required>
+                <small class="form-text text-muted">The display name is what other users will see.</small>
+              </div>
+              <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" class="form-control" id="signup-email" required>
+                <small class="form-text text-muted">Your email will not be visible to other users.</small>
+              </div>
+              <div class="form-group position-relative">
+                <label for="signup-password">Password</label>
+                <input type="password" class="form-control password" id="signup-password" required>
+                <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
+                  <i class="fas fa-eye"></i>
                 </div>
-                <div class="form-group">
-                  <label for="signup-email">Email</label>
-                  <input type="email" class="form-control" id="signup-email" required>
-                  <small class="form-text text-muted">Your email will not be visible to other users.</small>
+              </div>
+              <div class="form-group position-relative">
+                <label for="signup-password-confirm">Confirm Password</label>
+                <input type="password" class="form-control" id="signup-password-confirm" required>
+                <div id="password-match">
+                  <i id="match" class="fas fa-check"></i>
+                  <i id="no-match" class="fas fa-times"></i>
                 </div>
-                <div class="form-group position-relative">
-                  <label for="signup-password">Password</label>
-                  <input type="password" class="form-control password" id="signup-password" required>
-                  <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
-                    <i class="fas fa-eye"></i>
-                  </div>
-                </div>
-                <div class="form-group position-relative">
-                  <label for="signup-password-confirm">Confirm Password</label>
-                  <input type="password" class="form-control" id="signup-password-confirm" required>
-                  <small id="password-response" class="form-text"></small>
-                  <div id="password-match">
-                    <i id="match" class="fas fa-check"></i>
-                    <i id="no-match" class="fas fa-times"></i>
-                  </div>
-                </div>
-                <button class="btn btn-success">Sign Up</button>
-              </form>
-            </div>
+              </div> <!-- End Position: Relative Form Group -->
+              <small id="password-response" class="form-text"></small>
+              <button id="signup-button" class="btn btn-success">Sign Up</button>
+            </form>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Login Modal -->
-      <div class="modal fade" id="modal-login" tabindex="10" role="dialog" aria-labelledby="login-modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Log In</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="login-form">
-                <div class="form-group">
-                  <label for="login-email">Email</label>
-                  <input type="email" class="form-control" id="login-email" required>
-                </div>
-                <div class="form-group position-relative">
-                  <label for="login-password">Password</label>
-                  <input type="password" class="form-control password" id="login-password" required>
-                  <small id="password-login-response" class="form-text"></small>
-                  <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
-                    <i class="fas fa-eye"></i>
-                  </div>
-                </div>
-                <button class="btn btn-success">Log In</button>
-              </form>
-            </div>
+    <!-- Login Modal -->
+    <div class="modal fade" id="modal-login" tabindex="10" role="dialog" aria-labelledby="login-modal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Log In</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-        </div>
+          <div class="modal-body">
+            <form id="login-form">
+              <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" class="form-control" id="login-email" required>
+              </div>
+              <div class="form-group position-relative">
+              <label for="login-password">Password</label>
+                <input type="password" class="form-control password" id="login-password" required>
+                <div class="password-toggle" data-toggle="tooltip" data-placement="right" title="Hide/Show Password">
+                  <i class="fas fa-eye"></i>
+                </div>
+              </div> <!-- End Form group -->
+              <small id="password-login-response" class="form-text"></small>
+              <button id="login-button" class="btn btn-success">Log In</button>
+            </form>
+          </div>
+        </div> <!-- End Modal Content -->
       </div>
+    </div> <!-- End Login Modal -->
 
-      <!-- Music -->
-      <iframe src="assets/music/silence.mp3" allow="autoplay" style="display:none"></iframe>
-      <audio id="audio" autoplay loop>
-        <source src="assets/music/trainbeats.mp3" type="audio/mp3">
-      </audio>
-      <audio id="midnight-train">
-        <source src="assets/music/midnight-train.mp3 " type="audio/mp3">
-      </audio>
+    <!-- Music -->
+    <iframe src="assets/music/silence.mp3" allow="autoplay" style="display:none"></iframe>
+    <audio id="audio" autoplay loop>
+      <source src="assets/music/trainbeats.mp3" type="audio/mp3">
+    </audio>
+    <audio id="midnight-train">
+      <source src="assets/music/midnight-train.mp3 " type="audio/mp3">
+    </audio>
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
@@ -310,7 +318,6 @@
     <!-- My JavaScript -->
     <script src="assets/javascript/app.js"></script>
     <script src = "assets/javascript/auth.js"></script>
-    
 
   </body>
 </html>

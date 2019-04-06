@@ -38,7 +38,8 @@ trainForm.on('submit', (e) => {
       destination: destination,
       firstArrival: firstArrival,
       frequency: frequency,
-      dateAdded: new Date()
+      dateAdded: new Date(),
+      createdBy: userDisplayName
     }).then(() => {
       inputFormAnimate()
       // Reset form fields
@@ -47,6 +48,8 @@ trainForm.on('submit', (e) => {
     }).catch(error => {
       console.log(error.message)
     })
+  } else {
+    console.log(inputValid)
   }
 })
 
@@ -74,6 +77,7 @@ let createTrains = (data) => {
           <td>${train.frequency}</td>
           <td>${nextArrival}</td>
           <td>${minutesAway}</td>
+          <td>${train.createdBy}</td>
           <td>
             <span data-toggle="tooltip" data-placement="top" title="Edit">
               <button class="edit" data-id="${id}"
@@ -91,9 +95,6 @@ let createTrains = (data) => {
     $('#train-table').html(html)
     // Get tooltips
     $('[data-toggle="tooltip"]').tooltip()
-  } else {
-    // Show 'Login to view trains' if the user is not logged in
-    $('#train-table').html('<h5 class="text-center mt-4 logged-out-text"><i class="fas fa-exclamation-triangle"></i> Login to view trains</h5>')
   }
 }
 
@@ -134,24 +135,10 @@ $(document).on('click', '.edit', function () {
   })
 })
 
-// OLD FIREBASE REALTIME DATABASE UPDATER
-// // Listens for edits and displays them to every instance of the page that's open
-// db.collection('trains').on('child_changed', function (snapshot) {
-//   let editID = snapshot.key
-
-//   $('#train-table > tr').each(function () {
-//     let trID = $(this).data('id')
-//     if (trID === editID) {
-//       console.log(snapshot.val().trainName)
-//       $(this).children('td').eq(0).text(snapshot.val().trainName)
-//       $(this).children('td').eq(1).text(snapshot.val().destination)
-//       $(this).children('td').eq(2).text(snapshot.val().frequency)
-//     }
-//   })
-// })
-
-// Only allows train to be added if it meets necessary requirements
+// INPUT VALIDATION
+// Only allows train to be added or edited if it meets necessary requirements
 let checkValidity = (name, dest, first, freq, isUpdate) => {
+  console.log('checking vailidty of input')
   // Check if running validity check on update or add new train
   let nameErr, destErr, timeErr, freqErr
   if (isUpdate) {
@@ -181,8 +168,8 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
     nameErr.removeClass('active')
   }
   // Check Destination input
-  if (dest === '' || dest.length < 3) {
-    destErr.text(' Destination is required. (3-20 Characters) ')
+  if (dest === '' || dest.length < 2) {
+    destErr.text(' Destination is required. (2-20 Characters) ')
     destErr.addClass('active')
     err++
   } else {
@@ -193,7 +180,10 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
   if ( lcDest.includes('ga') || lcDest.includes('georgia') ) {
-    $('#subtitle').text('to Georgia')
+    $('#subtitle').text('to Georgia').addClass('animated')
+    $('#moon').addClass('animated')
+    $('#title-icon').addClass('animated')
+    $('#audio-toggle').addClass('animated')
     trainAudio.pause()
     midnightTrain.volume = 1
     midnightTrain.play()
@@ -232,12 +222,31 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   }
   // If any errors exist, do not continue pushing to firebase
   if (err > 0) {
+    console.log(`Input invalid - Errors: ${err}`)
     return false
   } else {
+    console.log('Input valid - Sending train.')
     return true
   }
 }
 
+// OLD FIREBASE REALTIME DATABASE UPDATER
+// // Listens for edits and displays them to every instance of the page that's open
+// db.collection('trains').on('child_changed', function (snapshot) {
+//   let editID = snapshot.key
+
+//   $('#train-table > tr').each(function () {
+//     let trID = $(this).data('id')
+//     if (trID === editID) {
+//       console.log(snapshot.val().trainName)
+//       $(this).children('td').eq(0).text(snapshot.val().trainName)
+//       $(this).children('td').eq(1).text(snapshot.val().destination)
+//       $(this).children('td').eq(2).text(snapshot.val().frequency)
+//     }
+//   })
+// })
+
+// Allows user to dismiss errors by clicking on them
 $(document).on('click', '.error', function () {
   $(this).text('')
   $(this).removeClass('active')
@@ -269,7 +278,10 @@ let inputFormAnimate = () => {
 trainAudio.volume = 0.08
 // Play the train noise when Midnight train ends
 midnightTrain.addEventListener('ended', function () {
-  $('#subtitle').text('to wherever')
+  $('#subtitle').text('to wherever').removeClass('animated')
+  $('#moon').removeClass('animated')
+  $('#title-icon').removeClass('animated')
+  $('#audio-toggle').removeClass('animated')
   trainAudio.play()
 })
 
