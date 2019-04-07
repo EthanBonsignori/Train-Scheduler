@@ -77,6 +77,11 @@ body {
   #audio-toggle:hover {
     text-shadow: 1px 1px 6px;
   }
+/* Account Details */
+#account-details {
+  margin-left: 30%;
+  margin-right: 30%;
+}
 
 /* Account Buttons */
 .logged-in, .logged-out {
@@ -98,6 +103,10 @@ body {
 
   border-top-right-radius: 0;
   border-top-left-radius: 0;
+}
+
+#logout {
+  margin-top: 1rem;
 }
 
 .password-toggle {

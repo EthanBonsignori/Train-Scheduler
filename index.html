@@ -43,15 +43,26 @@
         <div id="account-collapse" class="collapse">
           <div class="card-body">
             <div class="logged-out text-center">
-              <button class="btn btn-success" id="login" data-toggle="modal" data-target="#modal-login">
+              <button class="btn btn-primary" id="login" data-toggle="modal" data-target="#modal-login">
                 Login
               </button>
-              <button class="btn btn-primary" id="create-account" data-toggle="modal" data-target="#modal-signup">
+              <button class="btn btn-success" id="create-account" data-toggle="modal" data-target="#modal-signup">
                 Create Account
               </button>
             </div><!-- End Logged Out Display -->
-            <div id="account-details" class="logged-in text-center"></div>
+            <div id="account-details" class="logged-in text-left">
               <!-- Account details added here on log in -->
+              <h6 id="display-name" data-value="no-user"> 
+                <i class="far fa-heart"></i> Display Name: <span class="lead" id="user-display-name"></span>
+              </h6>
+              <h6>
+                <i class="far fa-envelope"></i> Email: <span class="lead" id="user-email"></span>
+              </h6>
+              <h6>
+                <i class="far fa-clock"></i> Account Created: <span class="lead" id="user-account-created"></span>
+              </h6>
+            </div>
+              
             <div class="text-center logged-in">
               <button class="btn btn-danger" id="logout">Logout</button>
             </div>
@@ -70,7 +81,7 @@
         </h5>
         <div id="table-collapse" class="collapse">
           <div class="card-body">
-            <h5 class="logged-out text-center"><i class="fas fa-exclamation-triangle"></i> Log in to view the train schedule</h5>
+            <h2 class="logged-out text-center"><i class="fas fa-exclamation-triangle text-warning"></i> Log in to view Train Schedule & Add Trains</h2>
             <div class="logged-in">
               <table class="table table-hover">
                 <thead>

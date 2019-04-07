@@ -6,21 +6,16 @@ let isUpdate = false
 // Hide and show html elements based on whether user is logged in or out
 const userLoggedOut = document.querySelectorAll('.logged-out')
 const userLoggedIn = document.querySelectorAll('.logged-in')
-const accountDetails = $('#account-details')
-let userDisplayName
 
 const setupUI = (user) => {
-  // if logged in
+  // if loggedin
   if (user) {
-    accountDetails.empty()
     db.collection('users').doc(user.uid).get().then(doc => {
-      userDisplayName = doc.data().displayName
       // Show account info
-      const html = `
-        <h6 id="display-name" data-value="${doc.data().displayName}">Display Name: ${doc.data().displayName}</h6>
-        <h6>Email: ${user.email}</h6>
-        <h6>Account created: ${user.metadata.creationTime}</h6>`
-      accountDetails.prepend(html)
+      $('#display-name').attr('data-value', doc.data().displayName)
+      $('#user-display-name').text(doc.data().displayName)
+      $('#user-email').text(user.email)
+      $('#user-account-created').text(user.metadata.creationTime)
     })
     // Show UI elements
     userLoggedIn.forEach((item) => { item.style.display = 'block' })
@@ -28,7 +23,10 @@ const setupUI = (user) => {
   // if logged out
   } else {
     // Hide account details
-    accountDetails.empty()
+    $('#display-name').attr('data-value', '')
+    $('#user-display-name').text('')
+    $('#user-email').text('')
+    $('#user-account-created').text('')
     // Hide UI elements
     userLoggedIn.forEach((item) => { item.style.display = 'none' })
     userLoggedOut.forEach((item) => { item.style.display = 'block' })
@@ -146,6 +144,7 @@ let createTrains = (data) => {
 $(document).on('click', '.edit', function () {
   // Get the id of the clicked button
   let editID = $(this).attr('data-id')
+  console.log(editID)
   // Find the element clicked on in probably the ugliest way possible
   let namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
   let destPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(1).text()
