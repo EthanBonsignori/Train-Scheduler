@@ -1,46 +1,16 @@
-// Hide and show html elements based on whether user is logged in or out
-const userLoggedOut = document.querySelectorAll('.logged-out')
-const userLoggedIn = document.querySelectorAll('.logged-in')
-const accountDetails = $('#account-details')
-
-const setupUI = (user) => {
-  // if logged in
-  if (user) {
-    accountDetails.empty()
-    // Show account info
-    const html = `
-      <h6 id="display-name">Display Name: ${user.displayName}</h6>
-      <h6>Email: ${user.email}</h6>
-      <h6>Account created: ${user.metadata.creationTime}</h6>
-    `
-    accountDetails.prepend(html)
-    // Show UI elements
-    userLoggedIn.forEach((item) => { item.style.display = 'block' })
-    userLoggedOut.forEach((item) => { item.style.display = 'none' })
-  // if logged out
-  } else {
-    // Hide account details
-    accountDetails.empty()
-    // Hide UI elements
-    userLoggedIn.forEach((item) => { item.style.display = 'none' })
-    userLoggedOut.forEach((item) => { item.style.display = 'block' })
-  }
-}
-
-// Store display name of logged in user globally
-let userDisplayName
 // Listen for auth status changes
 auth.onAuthStateChanged(user => {
   if (user) {
     console.log('User logged in', user)
-    // Save the display name of the logged in user
-    userDisplayName = user.displayName
     // Grab train info on any change in the database
-    db.collection('trains').onSnapshot(snapshot => {
+    db.collection('trains').orderBy('dateAdded', 'desc').onSnapshot(snapshot => {
       createTrains(snapshot.docs)
       setupUI(user)
-    }, error => console.log(error.message))
+    }, error => {
+      console.log(error.message)
+    })
   } else {
+    $('.send-animate').addClass('animated')
     console.log('User logged out')
     // Run functions without data if user is not logged in so they won't display anything
     setupUI()
@@ -57,21 +27,19 @@ signupForm.on('submit', (e) => {
   const displayName = $('#signup-displayname').val()
   const email = $('#signup-email').val()
   const password = $('#signup-password').val()
-  userDisplayName = displayName
 
   // Signup the user
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(function (cred) {
-      // Close the signup modal and clear the signup forms
-      $('#modal-signup').modal('toggle')
-      document.getElementById('signup-form').reset()
-      let user = auth.currentUser
-      user.updateProfile({
-        displayName: displayName
-      })
-    }).catch(function (error) {
-      $('#password-response').html(error.message).css('color', 'red')
+  auth.createUserWithEmailAndPassword(email, password).then((cred) => {
+    return db.collection('users').doc(cred.user.uid).set({
+      displayName: displayName
     })
+  }).then(() => {
+    // Close the signup modal and clear the signup forms
+    $('#modal-signup').modal('toggle')
+    document.getElementById('signup-form').reset()
+  }).catch(function (error) {
+    $('#password-response').html(error.message).css('color', 'red')
+  })
 })
 
 // Toggle password visibility with icon by switching it from type=password to type=text

@@ -3,6 +3,38 @@ const trainAudio = document.getElementById('audio')
 const midnightTrain = document.getElementById('midnight-train')
 let isUpdate = false
 
+// Hide and show html elements based on whether user is logged in or out
+const userLoggedOut = document.querySelectorAll('.logged-out')
+const userLoggedIn = document.querySelectorAll('.logged-in')
+const accountDetails = $('#account-details')
+let userDisplayName
+
+const setupUI = (user) => {
+  // if logged in
+  if (user) {
+    accountDetails.empty()
+    db.collection('users').doc(user.uid).get().then(doc => {
+      userDisplayName = doc.data().displayName
+      // Show account info
+      const html = `
+        <h6 id="display-name" data-value="${doc.data().displayName}">Display Name: ${doc.data().displayName}</h6>
+        <h6>Email: ${user.email}</h6>
+        <h6>Account created: ${user.metadata.creationTime}</h6>`
+      accountDetails.prepend(html)
+    })
+    // Show UI elements
+    userLoggedIn.forEach((item) => { item.style.display = 'block' })
+    userLoggedOut.forEach((item) => { item.style.display = 'none' })
+  // if logged out
+  } else {
+    // Hide account details
+    accountDetails.empty()
+    // Hide UI elements
+    userLoggedIn.forEach((item) => { item.style.display = 'none' })
+    userLoggedOut.forEach((item) => { item.style.display = 'block' })
+  }
+}
+
 // Calculate next time the train will arrive and how many minutes away
 let getTrainTime = (first, freq) => {
   // First Time (pushed back 1 year to make sure it comes before current time)
@@ -32,6 +64,9 @@ trainForm.on('submit', (e) => {
   let inputValid = checkValidity(trainName, destination, firstArrival, frequency)
   // Only continue if the checkValidity function returns true
   if (inputValid) {
+    // Get user display name
+    let displayName = $('#display-name').attr('data-value')
+    let currentUID = auth.currentUser.uid
     // Push input to firebase
     db.collection('trains').add({
       trainName: trainName,
@@ -39,7 +74,8 @@ trainForm.on('submit', (e) => {
       firstArrival: firstArrival,
       frequency: frequency,
       dateAdded: new Date(),
-      createdBy: userDisplayName
+      createdBy: displayName,
+      createdByID: currentUID
     }).then(() => {
       inputFormAnimate()
       // Reset form fields
@@ -58,6 +94,7 @@ let trainNames = []
 let createTrains = (data) => {
   if (data.length) {
     let html = ''
+    let inc = 0
     // reset the train name array
     trainNames = []
     data.forEach(doc => {
@@ -68,34 +105,44 @@ let createTrains = (data) => {
       let times = getTrainTime(train.firstArrival, train.frequency)
       let minutesAway = times[0]
       let nextArrival = times[1]
-      const tr = `
+      // Store markup in a variable so we can add to it before displaying
+      let tr = `
         <tr data-id="${id}">
           <td>${train.trainName}</td>
           <td>${train.destination}</td>
           <td>${train.frequency}</td>
           <td>${nextArrival}</td>
           <td>${minutesAway}</td>
-          <td>${train.createdBy}</td>
-          <td>
-            <span data-toggle="tooltip" data-placement="top" title="Edit">
-              <button class="edit" data-id="${id}"
-              data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
-                <i class="fas fa-edit"></i>
-              </button>
-            </span>
-          </td>
-        </tr>
-      `
+          <td id="appendEdit${inc}" data-value="${train.createdByID}">${train.createdBy}</td>`
+      // Grab the current user uid
+      let currentUID = auth.currentUser.uid
+      // If the current user uid matches the ID of the person who created the train,
+      if (train.createdByID === currentUID) {
+        //  add an edit button to this trains table row (allows users to edit their train(s))
+        tr += `
+        <td>
+          <span data-toggle="tooltip" data-placement="top" title="Edit">
+            <button class="edit" data-id="${id}" data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
+              <i class="fas fa-edit"></i>
+            </button>
+          </span>
+        </td>
+      </tr>`
+      } else {
+        // end the table row (no edit button)
+        tr += `</tr>`
+      }
       // Add all the html markup to a variable
       html += tr
     })
     // Set the html of train table to dynamically created train data from firestore
     $('#train-table').html(html)
-    // Get tooltips
-    $('[data-toggle="tooltip"]').tooltip()
+    // Get tooltips & Hide them when they aren't hovered (so they don't remain open on modal popup)
+    $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' })
   }
 }
 
+// Listen for clicks on any edit button
 $(document).on('click', '.edit', function () {
   // Get the id of the clicked button
   let editID = $(this).attr('data-id')
@@ -265,6 +312,7 @@ $(document).on('click', '#audio-toggle', function () {
 
 // Animate submit train
 let inputFormAnimate = () => {
+  $('.send-animate').removeClass('animated')
   $('.send-animate').addClass('is-sent')
   setTimeout(function () {
     $('.send-animate').removeClass('is-sent')
