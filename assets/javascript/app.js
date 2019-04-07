@@ -82,8 +82,6 @@ trainForm.on('submit', (e) => {
     }).catch(error => {
       console.log(error.message)
     })
-  } else {
-    console.log(inputValid)
   }
 })
 
@@ -91,7 +89,6 @@ trainForm.on('submit', (e) => {
 let trainNames = []
 let createTrains = (data) => {
   if (data.length) {
-    console.log('yeah it is in here')
     let html = ''
     // reset the train name array
     trainNames = []
@@ -110,14 +107,15 @@ let createTrains = (data) => {
           <td>${train.destination}</td>
           <td>${train.frequency}</td>
           <td>${nextArrival}</td>
-          <td>${minutesAway}</td>
-          <td>${train.createdBy}</td>`
+          <td>${minutesAway}</td>`
       // Grab the current user uid
       let currentUID = auth.currentUser.uid
       // If the current user uid matches the ID of the person who created the train,
       if (train.createdByID === currentUID) {
-        //  add an edit button to this trains table row (allows users to edit their train(s))
+        // Display "You" next to the user who created the train if it's the logged in user
+        // Add an edit button to this train's table row which allows the user who created this train to edit some of its values
         tr += `
+        <td>${train.createdBy} <span class="text-muted small">You</span></td>
         <td>
           <span data-toggle="tooltip" data-placement="top" title="Edit">
             <button class="edit" data-id="${id}" data-toggle="modal" data-target="#edit-modal" data-backdrop="false">
@@ -127,8 +125,10 @@ let createTrains = (data) => {
         </td>
       </tr>`
       } else {
-        // end the table row (no edit button)
-        tr += `</tr>`
+        // Add the user who created the train and end the table row (no edit button)
+        tr += `
+          <td>${train.createdBy}</td>
+        </tr>`
       }
       // Add all the html markup to a variable
       html += tr
@@ -145,7 +145,6 @@ let editID
 $(document).on('click', '.edit', function () {
   // Get the id of the clicked button
   editID = $(this).attr('data-id')
-  console.log(editID)
   // Find the element clicked on in probably the ugliest way possible
   let namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
   let destPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(1).text()
