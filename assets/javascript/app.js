@@ -92,7 +92,6 @@ let trainNames = []
 let createTrains = (data) => {
   if (data.length) {
     let html = ''
-    let inc = 0
     // reset the train name array
     trainNames = []
     data.forEach(doc => {
@@ -111,7 +110,7 @@ let createTrains = (data) => {
           <td>${train.frequency}</td>
           <td>${nextArrival}</td>
           <td>${minutesAway}</td>
-          <td id="appendEdit${inc}" data-value="${train.createdByID}">${train.createdBy}</td>`
+          <td>${train.createdBy}</td>`
       // Grab the current user uid
       let currentUID = auth.currentUser.uid
       // If the current user uid matches the ID of the person who created the train,
@@ -182,7 +181,6 @@ $(document).on('click', '.edit', function () {
 // INPUT VALIDATION
 // Only allows train to be added or edited if it meets necessary requirements
 let checkValidity = (name, dest, first, freq, isUpdate) => {
-  console.log('checking vailidty of input')
   // Check if running validity check on update or add new train
   let nameErr, destErr, timeErr, freqErr
   if (isUpdate) {
@@ -232,7 +230,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
     midnightTrain.volume = 1
     midnightTrain.play()
   }
-  // Only check this if adding new train and not updating a previous one
+  // Only check this if adding new train and not updating a previous one because users can't change start time on edit
   if (!isUpdate) {
     // Check First Arrival input
     // regex (for when browsers don't support <input type="time">)
@@ -268,8 +266,9 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   if (err > 0) {
     console.log(`Input invalid - Errors: ${err}`)
     return false
+  // If no errors found in input return true, allowing functions to continue
   } else {
-    console.log('Input valid - Sending train.')
+    console.log('Input valid --- Sending train')
     return true
   }
 }
