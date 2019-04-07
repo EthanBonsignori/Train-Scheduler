@@ -91,6 +91,7 @@ trainForm.on('submit', (e) => {
 let trainNames = []
 let createTrains = (data) => {
   if (data.length) {
+    console.log('yeah it is in here')
     let html = ''
     // reset the train name array
     trainNames = []
@@ -139,10 +140,11 @@ let createTrains = (data) => {
   }
 }
 
+let editID
 // Listen for clicks on any edit button
 $(document).on('click', '.edit', function () {
   // Get the id of the clicked button
-  let editID = $(this).attr('data-id')
+  editID = $(this).attr('data-id')
   console.log(editID)
   // Find the element clicked on in probably the ugliest way possible
   let namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
@@ -153,29 +155,31 @@ $(document).on('click', '.edit', function () {
   $('#new-train-dest').val(destPlaceHolder)
   $('#new-train-freq').val(freqPlaceHolder)
   // Listen for clicks on save
-  $('#save-button').click((e) => {
-    e.preventDefault()
-    isUpdate = true
-    // Get text from inputs
-    let trainName = $('#new-train-name').val()
-    let destination = $('#new-train-dest').val()
-    let frequency = $('#new-train-freq').val()
-    // Check new inputs to make sure they are valid
-    let updateValid = checkValidity(trainName, destination, null, frequency, isUpdate)
-    // Update database with new values if they are valid
-    if (updateValid) {
-      db.doc(`/trains/${editID}`).update({
-        trainName: trainName,
-        destination: destination,
-        frequency: frequency
-      })
-      $('#edit-modal').modal('toggle')
-    }
-  })
-  $('#exit-button').click(function (e) {
-    e.preventDefault()
-    isUpdate = false
-  })
+})
+
+$('#save-button').click((e) => {
+  e.preventDefault()
+  isUpdate = true
+  // Get text from inputs
+  let trainName = $('#new-train-name').val()
+  let destination = $('#new-train-dest').val()
+  let frequency = $('#new-train-freq').val()
+  // Check new inputs to make sure they are valid
+  let updateValid = checkValidity(trainName, destination, null, frequency, isUpdate)
+  // Update database with new values if they are valid
+  if (updateValid) {
+    db.doc(`/trains/${editID}`).update({
+      trainName: trainName,
+      destination: destination,
+      frequency: frequency
+    })
+    $('#edit-modal').modal('toggle')
+  }
+})
+
+$('#exit-button').click(function (e) {
+  e.preventDefault()
+  isUpdate = false
 })
 
 // INPUT VALIDATION
