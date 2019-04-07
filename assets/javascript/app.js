@@ -6,7 +6,6 @@ let isUpdate = false
 // Hide and show html elements based on whether user is logged in or out
 const userLoggedOut = document.querySelectorAll('.logged-out')
 const userLoggedIn = document.querySelectorAll('.logged-in')
-
 const setupUI = (user) => {
   // if loggedin
   if (user) {
@@ -140,7 +139,14 @@ let createTrains = (data) => {
   }
 }
 
+//
+// EDITS
+//
+// Store the firestore document ID of the selected train to edit globally so we can access it in many functions
 let editID
+// Store html elements used in the functions to edit and delete trains
+const confirmDelete = $('#confirm-delete')
+const editForm = $('#edit-form-hide')
 // Listen for clicks on any edit button
 $(document).on('click', '.edit', function () {
   // Get the id of the clicked button
@@ -155,7 +161,8 @@ $(document).on('click', '.edit', function () {
   $('#new-train-freq').val(freqPlaceHolder)
   // Listen for clicks on save
 })
-
+// SAVE EDIT
+// When user clicks on the save button
 $('#save-button').click((e) => {
   e.preventDefault()
   isUpdate = true
@@ -175,13 +182,49 @@ $('#save-button').click((e) => {
     $('#edit-modal').modal('toggle')
   }
 })
-
-$('#exit-button').click(function (e) {
+// EXIT EDIT
+// When the user clicks on the exit button (closes modal from html data-toggle)
+$('#exit-button').click((e) => {
+  // Here all we need to do is prevent it from reloading the page
   e.preventDefault()
-  isUpdate = false
+})
+// DELETE TRAIN
+// When user clicks on the delete button in the edit modal
+$('#delete-button').click((e) => {
+  e.preventDefault()
+  // Hide the edit form and display the delete confirmation div
+  editForm.css('display', 'none')
+  confirmDelete.css('display', 'block')
+})
+// CONFIRM DELETE TRAIN
+// When user clicks on the confirm delete button in the confirm delete div
+$('#confirm-delete-button').click((e) => {
+  e.preventDefault()
+  db.collection('trains').doc(editID)
+    .delete()
+    .then(() => {
+      console.log('Train successfully removed from existance!')
+      // Close the modal and revert it back to the edit form instead of delete confirmation
+      $('#edit-modal').modal('toggle')
+      editForm.css('display', 'flex')
+      confirmDelete.css('display', 'none')
+    }).catch((error) => {
+      console.error('Error removing train: ', error)
+    })
+})
+// CANCEL DELETE TRAIN
+// When user clicks on the cancel delete button in the confirm delete div
+$('#cancel-delete-button').click((e) => {
+  e.preventDefault()
+
+  // Hide the delete confirmation div and display the edit form again
+  editForm.css('display', 'flex')
+  confirmDelete.css('display', 'none')
 })
 
+//
 // INPUT VALIDATION
+// abandon all hope he who enters here
 // Only allows train to be added or edited if it meets necessary requirements
 let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Check if running validity check on update or add new train
@@ -276,7 +319,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   }
 }
 
-// OLD FIREBASE REALTIME DATABASE UPDATER
+// OLD FIREBASE REALTIME DATABASE UPDATER // NOW USING FIREBASE FIRESTORE CLOUD
 // // Listens for edits and displays them to every instance of the page that's open
 // db.collection('trains').on('child_changed', function (snapshot) {
 //   let editID = snapshot.key

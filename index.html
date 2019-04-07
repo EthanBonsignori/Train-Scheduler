@@ -102,8 +102,21 @@
                   <div class="modal-dialog" id="edit-modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-body">
+                        <!-- Hidden Delete Confirmation (Will show when user presses delete button) -->
+                        <div id="confirm-delete" class="row" style="display:none">
+                          <p class="display-4 text-bold text-center" style="font-size:2.5rem">Confirm Deletion</p>
+                          <div class="text-center">
+                          <button id="confirm-delete-button" class="btn btn-danger">Delete</button> 
+                          <button id="cancel-delete-button" class="btn btn-secondary">Cancel</button>
+                          </div>
+                          <div class="text-center mt-2">
+                            <small id="confirm-delete-button-label" class="text-muted">
+                              <i class="fas fa-exclamation-triangle text-warning"></i> This cannot be undone!
+                            </small>
+                          </div>
+                        </div>
                         <form id="edit-form">
-                          <div class="row">
+                          <div id="edit-form-hide" class="row">
                             <div class="col">
                               <!-- Edit Train Name -->
                               <label for="new-train-name">Train Name</label>
@@ -125,6 +138,7 @@
                             <div class="col" id="save-button-container">
                               <button type="submit" class="btn btn-success" id="save-button">Save</button>
                               <button type="submit" class="btn btn-danger" id="exit-button" data-toggle="modal" data-target="#edit-modal">Exit</button>
+                              <button type="submit" class="btn btn-danger" id="delete-button"><i class="fas fa-trash-alt"></i></button>
                             </div>
                           </div>
                         </form>

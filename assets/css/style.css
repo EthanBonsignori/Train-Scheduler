@@ -234,10 +234,18 @@ body {
     margin-top: 1.5rem;
     margin-left: 1rem;
   }
-  #train-table .fa-exclamation-triangle {
-    color: orange;
-    font-size: 2rem;
+  #delete-button {
+    margin-top: 1.5rem;
+    margin-left: 1rem;
   }
+
+/* Confirm Delete */
+#confirm-delete-button, #cancel-delete-button {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
 
 /* New Train Input */
 #train-form input[type=text] {
