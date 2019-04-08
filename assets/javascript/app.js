@@ -281,7 +281,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Play midnight train if destination includes ga or georgia
   // update the subtitle so it reads 'Midnight Train to Georgia'
   let lcDest = dest.toLowerCase()
-  if (lcDest.includes('ga') || lcDest.includes('georgia')) {
+  if (lcDest.includes(' ga') || lcDest.includes('georgia')) {
     $('#subtitle').text('to Georgia').addClass('animated')
     $('#moon').addClass('animated')
     $('#title-icon').addClass('animated')
