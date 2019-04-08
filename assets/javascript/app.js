@@ -7,7 +7,7 @@ let isUpdate = false
 const userLoggedOut = document.querySelectorAll('.logged-out')
 const userLoggedIn = document.querySelectorAll('.logged-in')
 const setupUI = (user) => {
-  // if loggedin
+  // if logged in
   if (user) {
     db.collection('users').doc(user.uid).get().then(doc => {
       // Show account info
@@ -95,6 +95,7 @@ let createTrains = (data) => {
       const train = doc.data()
       let id = doc.id
       trainNames.push(train.trainName.toLowerCase())
+      console.log(trainNames)
       // Returns converted time values
       let times = getTrainTime(train.firstArrival, train.frequency)
       let minutesAway = times[0]
@@ -142,8 +143,8 @@ let createTrains = (data) => {
 //
 // EDITS
 //
-// Store the firestore document ID of the selected train to edit globally so we can access it in many functions
-let editID
+// Store the firestore document ID of the selected train to edit globally so we can access it later
+let editID, editIndex, namePlaceHolder
 // Store html elements used in the functions to edit and delete trains
 const confirmDelete = $('#confirm-delete')
 const editForm = $('#edit-form-hide')
@@ -152,14 +153,15 @@ $(document).on('click', '.edit', function () {
   // Get the id of the clicked button
   editID = $(this).attr('data-id')
   // Find the element clicked on in probably the ugliest way possible
-  let namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
+  namePlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(0).text()
   let destPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(1).text()
   let freqPlaceHolder = $(`tr[data-id='${editID}']`).children('td').eq(2).text()
   // Set the edit input placeholder text so it matches the element the user wants to edit
   $('#new-train-name').val(namePlaceHolder)
   $('#new-train-dest').val(destPlaceHolder)
   $('#new-train-freq').val(freqPlaceHolder)
-  // Listen for clicks on save
+  // Grab the index of train being edited
+  editIndex = trainNames.indexOf(namePlaceHolder.toLowerCase())
 })
 // SAVE EDIT
 // When user clicks on the save button
@@ -170,8 +172,17 @@ $('#save-button').click((e) => {
   let trainName = $('#new-train-name').val()
   let destination = $('#new-train-dest').val()
   let frequency = $('#new-train-freq').val()
-  // Check new inputs to make sure they are valid
-  let updateValid = checkValidity(trainName, destination, null, frequency, isUpdate)
+  // Check validity of input
+  let updateValid = false
+  // If the trainName is equal to the one being edited,
+  if (trainName.toLowerCase() === trainNames[editIndex]) {
+    // Don't send the name to be checked
+    updateValid = checkValidity(undefined, destination, null, frequency, isUpdate)
+  // If the name is a new name,
+  } else {
+    // Check inputs regularly
+    updateValid = checkValidity(trainName, destination, null, frequency, isUpdate)
+  }
   // Update database with new values if they are valid
   if (updateValid) {
     db.doc(`/trains/${editID}`).update({
@@ -243,20 +254,23 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Will count up for each error and only allow the script to continue if there are 0 errors
   let err = 0
   // Check Train Name input
-  if (trainNames.indexOf(name.toLowerCase()) > -1) {
-    nameErr.text(' That train already exists! ')
-    nameErr.addClass('active')
-    err++
-  } else if (name === '' || name.length < 3) {
-    nameErr.text(' Train Name is required. (3-20 Characters) ')
-    nameErr.addClass('active')
-    err++
-  } else {
-    nameErr.text('')
-    nameErr.removeClass('active')
+  // If there was a name param passed, check it, otherwise skip this block
+  if (name) {
+    if (trainNames.indexOf(name.toLowerCase()) > -1) {
+      nameErr.text(' That train already exists! ')
+      nameErr.addClass('active')
+      err++
+    } else if (name === '' || name.length < 3 || name.length > 20) {
+      nameErr.text(' Train Name is required. (3-20 Characters) ')
+      nameErr.addClass('active')
+      err++
+    } else {
+      nameErr.text('')
+      nameErr.removeClass('active')
+    }
   }
   // Check Destination input
-  if (dest === '' || dest.length < 2) {
+  if (dest === '' || dest.length < 2 || dest.length > 20) {
     destErr.text(' Destination is required. (2-20 Characters) ')
     destErr.addClass('active')
     err++
@@ -279,7 +293,7 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   // Only check this if adding new train and not updating a previous one because users can't change start time on edit
   if (!isUpdate) {
     // Check First Arrival input
-    // regex (for when browsers don't support <input type="time">)
+    // regex for when browsers don't support <input type="time">
     const timeRegex = RegExp('^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$')
     let checkTime = timeRegex.test(first)
     if (first === '') {
@@ -310,11 +324,10 @@ let checkValidity = (name, dest, first, freq, isUpdate) => {
   }
   // If any errors exist, do not continue pushing to firebase
   if (err > 0) {
-    console.log(`Input invalid - Errors: ${err}`)
     return false
   // If no errors found in input return true, allowing functions to continue
   } else {
-    console.log('Input valid --- Sending train')
+    console.log('Input Valid ---> Sending Train')
     return true
   }
 }
@@ -354,7 +367,7 @@ $(document).on('click', '#audio-toggle', function () {
   }
 })
 
-// Animate submit train
+// Animate submit train form on valid submission
 let inputFormAnimate = () => {
   $('.send-animate').removeClass('animated')
   $('.send-animate').addClass('is-sent')
